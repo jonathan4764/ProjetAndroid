@@ -47,6 +47,7 @@ public class AnalyseAliment extends AppCompatActivity{
 
 
             ArrayList<String> listeProduits = new ArrayList<>();
+            ArrayList<Nutriment> listeProduits2 = new ArrayList<>();
 
             ProduitAdapteur adapter = new ProduitAdapteur(this,listeProduits);
             listView.setAdapter(adapter);
@@ -58,12 +59,12 @@ public class AnalyseAliment extends AppCompatActivity{
                     // Récupérer l'élément cliqué
                     String produit = (String) parent.getItemAtPosition(position);
 
-                    // Afficher un toast
-                    Toast.makeText(AnalyseAliment.this, "Produit : " + produit, Toast.LENGTH_SHORT).show();
+
+                    Produit produitfinal = new Produit(produit,listeProduits2);
 
                     // Ou lancer une nouvelle activité avec ce produit
                     Intent intent = new Intent(AnalyseAliment.this, AfficherProduit.class);
-                    intent.putExtra("product_name", produit);
+                    intent.putExtra("product_name", produitfinal);
                     startActivity(intent);
                 }
             });
@@ -89,10 +90,12 @@ public class AnalyseAliment extends AppCompatActivity{
                                     API api = new API(codefinal);
                                     api.callAPI(new APICallback() {
                                         @Override
-                                        public void onSuccess(String productName) {
+                                        public void onSuccess(Produit product) {
                                             runOnUiThread(() -> {
                                                 // Ajouter à la liste
-                                                listeProduits.add(productName);
+                                                listeProduits.add(product.getName());
+                                                listeProduits2.clear();
+                                                listeProduits2.addAll(product.getNutriment());
                                                 adapter.notifyDataSetChanged();
                                             });
                                         }

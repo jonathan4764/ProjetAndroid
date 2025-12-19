@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="Historique">Historique</string>
+    <string name="Proteine">Proteine</string>
+    <string name="Glucide">Glucide</string>
+    <string name="Calories">Calories</string>
+
 </resources>

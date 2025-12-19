@@ -16,7 +16,7 @@ public class ProduitAdapteur extends ArrayAdapter {
     private Context context;
     private  ArrayList<String> produits;
 
-    public ProduitAdapteur(Context context, ArrayList produits) {
+    public ProduitAdapteur(Context context, ArrayList<String> produits) {
         super(context, R.layout.produit, produits);
         this.context = context;
         this.produits = produits;
