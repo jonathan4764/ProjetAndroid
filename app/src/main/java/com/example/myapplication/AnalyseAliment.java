@@ -41,6 +41,9 @@ public class AnalyseAliment extends AppCompatActivity{
             });
 
             Button  button2 = findViewById(R.id.buttonScanner);
+            Button  button3 = findViewById(R.id.bntprofil);
+            Button  button4 = findViewById(R.id.bntresumer);
+            Button  button5 = findViewById(R.id.bntcalandrier);
             ListView listView = findViewById(R.id.listeproduit);
 
 
@@ -51,6 +54,30 @@ public class AnalyseAliment extends AppCompatActivity{
 
             ProduitAdapteur adapter = new ProduitAdapteur(this,listeProduits);
             listView.setAdapter(adapter);
+
+            button3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AnalyseAliment.this,ModifProfilActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            button5.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AnalyseAliment.this,CalandrierActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            button4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(AnalyseAliment.this,RapportJourneeActivity.class);
+                    startActivity(intent);
+                }
+            });
 
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

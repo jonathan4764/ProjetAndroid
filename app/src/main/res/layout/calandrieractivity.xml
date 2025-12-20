@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <!-- Titre Historique -->
-    <TextView
-        android:id="@+id/textHistorique"
+    <!-- Calendrier pour sélectionner une journée -->
+    <CalendarView
+        android:id="@+id/calendarHistorique"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/Historique"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/buttonScanner"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Bouton Scanner à droite -->
-    <Button
-        android:id="@+id/buttonScanner"
+    <!-- Liste des repas de la journée -->
+    <TextView
+        android:id="@+id/textRepas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="Scanner"
-        app:layout_constraintBottom_toBottomOf="@id/textHistorique"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textHistorique" />
+        android:text="Repas de la journée"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/calendarHistorique"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- ListView -->
-    <ListView
-        android:id="@+id/listeproduit"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerRepas"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/textRepas"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textHistorique" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Barre de boutons en bas -->
+    <!-- Barre de navigation en bas -->
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="0dp"
@@ -49,35 +48,36 @@
         android:padding="8dp"
         android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <Button
+            android:id="@+id/bnthistorique"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Historique" />
+            android:text="Accueil" />
 
         <Button
-            android:id="@+id/bntresumer"
+            android:id="@+id/bntjournee"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Resumerdujour" />
+            android:text="Ajouter Repas" />
 
         <Button
             android:id="@+id/bntcalandrier"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Calandrier" />
+            android:text="Statistiques" />
 
         <Button
-            android:id="@+id/bntprofil"
+            android:id="@+id/btnProfil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/Profil" />
+            android:text="Profil"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

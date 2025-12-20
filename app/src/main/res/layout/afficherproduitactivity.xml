@@ -59,25 +59,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Btn 1" />
+            android:text="@string/Historique" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Btn 2" />
+            android:text="@string/Resumerdujour" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Btn 3" />
+            android:text="@string/Calandrier" />
 
         <Button
+            android:id="@+id/bntprofil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Btn 4" />
+            android:text="@string/Profil" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

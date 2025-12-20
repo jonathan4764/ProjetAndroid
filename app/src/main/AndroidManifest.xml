@@ -28,6 +28,24 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".ModifProfilActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".RapportJourneeActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".CalandrierActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

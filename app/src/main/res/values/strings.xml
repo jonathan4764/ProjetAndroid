@@ -4,5 +4,15 @@
     <string name="Proteine">Proteine</string>
     <string name="Glucide">Glucide</string>
     <string name="Calories">Calories</string>
+    <string name="Profil">Profil</string>
+    <string name="Calandrier">Calandrier</string>
+    <string name="Resumerdujour">Resumerdujour</string>
+
+    <string-array name="niveau_activite">
+        <item>Sédentaire</item>
+        <item>Légèrement actif</item>
+        <item>Actif</item>
+        <item>Très actif</item>
+    </string-array>
 
 </resources>

@@ -40,6 +40,7 @@ dependencies {
     testImplementation(libs.junit)
     implementation("com.squareup.okhttp3:okhttp:5.3.2")
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

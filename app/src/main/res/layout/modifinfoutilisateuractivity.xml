@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Contenu scrollable -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Titre -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Paramètres utilisateur"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Sexe -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sexe" />
+
+            <RadioGroup
+                android:id="@+id/radioSexe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioHomme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Homme" />
+
+                <RadioButton
+                    android:id="@+id/radioFemme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Femme" />
+            </RadioGroup>
+
+            <!-- Âge -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Âge" />
+
+            <EditText
+                android:id="@+id/editAge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ex : 25"
+                android:inputType="number" />
+
+            <!-- Taille -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Taille (cm)" />
+
+            <EditText
+                android:id="@+id/editTaille"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ex : 175"
+                android:inputType="number" />
+
+            <!-- Poids -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Poids (kg)" />
+
+            <EditText
+                android:id="@+id/editPoids"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ex : 70"
+                android:inputType="numberDecimal" />
+
+            <!-- Activité -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Niveau d'activité physique" />
+
+            <Spinner
+                android:id="@+id/spinnerActivite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btnEnregistrer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Enregistrer" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Barre de boutons en bas -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Historique" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Resumerdujour" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Calandrier" />
+
+        <Button
+            android:id="@+id/bntprofil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Profil" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

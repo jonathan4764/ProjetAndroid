@@ -35,9 +35,9 @@ public class API {
 
 
                 ArrayList<Nutriment> listnutiment = new ArrayList<>();
-                Nutriment proteine = new Nutriment("Proteine",nutriments.getString("proteins_100g") + "g");
-                Nutriment glucide = new Nutriment("Glucide",nutriments.getString("carbohydrates_100g") + "g");
-                Nutriment calories = new Nutriment("Calories",nutriments.getString("energy-kcal_100g") + "kcal");
+                Nutriment proteine = new Nutriment("Proteine",nutriments.getString("proteins_100g"));
+                Nutriment glucide = new Nutriment("Glucide",nutriments.getString("carbohydrates_100g"));
+                Nutriment calories = new Nutriment("Calories",nutriments.getString("energy-kcal_100g"));
 
                 listnutiment.add(proteine);
                 listnutiment.add(glucide);
