@@ -4,11 +4,11 @@ public class Utilisateur {
 
     private String sexe;
     private int age;
-    private float taille;
-    private float poids;
+    private double taille;
+    private double poids;
     private String activite;
 
-    public Utilisateur(String sexe, int age, float taille, float poids, String activite){
+    public Utilisateur(String sexe, int age, double taille, double poids, String activite){
         this.activite = activite;
         this.taille = taille;
         this.age = age;
@@ -33,19 +33,19 @@ public class Utilisateur {
         this.age = age;
     }
 
-    public float getTaille() {
+    public double getTaille() {
         return taille;
     }
 
-    public void setTaille(float taille) {
+    public void setTaille(double taille) {
         this.taille = taille;
     }
 
-    public float getPoids() {
+    public double getPoids() {
         return poids;
     }
 
-    public void setPoids(float poids) {
+    public void setPoids(double poids) {
         this.poids = poids;
     }
 

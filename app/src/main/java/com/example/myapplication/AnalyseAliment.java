@@ -1,13 +1,12 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -46,11 +45,26 @@ public class AnalyseAliment extends AppCompatActivity{
             Button  button5 = findViewById(R.id.bntcalandrier);
             ListView listView = findViewById(R.id.listeproduit);
 
+            Helper helper = Helper.getInstance(AnalyseAliment.this);
 
+            ArrayList<Produit> listeProduits = new ArrayList<>();
 
+            Cursor cursor = helper.getAllProducts();
 
-            ArrayList<String> listeProduits = new ArrayList<>();
-            ArrayList<Nutriment> listeProduits2 = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
+                String nom = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
+                String img = cursor.getString(cursor.getColumnIndexOrThrow("image"));
+
+                ArrayList<Nutriment> nutriments = helper.getNutrimentsByProduitId(id);
+
+                Produit p = new Produit(nom,img,nutriments);
+
+                listeProduits.add(p);
+            }
+            cursor.close();
+
+            ArrayList<ProduitNutriment> listeProduits2 = new ArrayList<>();
 
             ProduitAdapteur adapter = new ProduitAdapteur(this,listeProduits);
             listView.setAdapter(adapter);
@@ -84,14 +98,11 @@ public class AnalyseAliment extends AppCompatActivity{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Récupérer l'élément cliqué
-                    String produit = (String) parent.getItemAtPosition(position);
-
-
-                    Produit produitfinal = new Produit(produit,listeProduits2);
+                    Produit produit = (Produit)parent.getItemAtPosition(position);
 
                     // Ou lancer une nouvelle activité avec ce produit
                     Intent intent = new Intent(AnalyseAliment.this, AfficherProduit.class);
-                    intent.putExtra("product_name", produitfinal);
+                    intent.putExtra("product_name", produit);
                     startActivity(intent);
                 }
             });
@@ -119,11 +130,33 @@ public class AnalyseAliment extends AppCompatActivity{
                                         @Override
                                         public void onSuccess(Produit product) {
                                             runOnUiThread(() -> {
-                                                // Ajouter à la liste
-                                                listeProduits.add(product.getName());
-                                                listeProduits2.clear();
-                                                listeProduits2.addAll(product.getNutriment());
+
+                                                // Vérifie si le produit existe déjà
+                                                Produit p = helper.getProductByName(product.getName());
+                                                if (p != null) {
+                                                    Toast.makeText(AnalyseAliment.this, "Vous avez déjà scanné ce produit", Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                // Insère le produit
+                                                long idProduit = helper.insertProduit(product.getName(), product.getImage());
+
+                                                for (Nutriment n : product.getNutriment()) {
+                                                    // Récupère l'ID du nutriment existant
+                                                    long idNutriment = helper.getNutrimentsByName(n.getNom());
+
+                                                    // On ne fait rien si le nutriment n’existe pas dans la table nutriment
+                                                    if (idNutriment != -1) {
+                                                        helper.insertProduitNutriment(idProduit, idNutriment,n.getNom() ,n.getValeur());
+                                                    } else {
+                                                        // Optionnel : loguer un avertissement si le nutriment n'existe pas
+                                                        Log.w("DB", "Nutriment non trouvé dans la table: " + n.getNom());
+                                                    }
+                                                }
+
+                                                listeProduits.add(product);
                                                 adapter.notifyDataSetChanged();
+
                                             });
                                         }
 

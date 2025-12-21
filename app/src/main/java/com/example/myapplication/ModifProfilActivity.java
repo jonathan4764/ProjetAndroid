@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,20 +45,46 @@ public class ModifProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(validerFormulaire(poids, age, taille,spinner,radioSexe)){
+
+                    String sexe = "";
+                    double poids2 = Double.parseDouble(poids.getText().toString());
+                    double taille2 = Double.parseDouble(taille.getText().toString());
+                    int age2 = Integer.parseInt(age.getText().toString());
+                    String activite2 = spinner.getSelectedItem().toString();
+                    int selectedId = radioSexe.getCheckedRadioButtonId();
+
+                    if (selectedId == R.id.radioHomme) {
+                        System.out.println("Sexe: Homme");
+                        sexe = "Homme";
+                    } else if (selectedId == R.id.radioFemme) {
+                        System.out.println("Sexe: Femme");
+                        sexe = "Femme";
+                    }
+
+                    Helper helper = Helper.getInstance(ModifProfilActivity.this);
+
+                    helper.insertUser(sexe,age2,poids2,taille2,activite2);
+
+                    // Lecture
+                    Cursor cursor = helper.getAllUsers();
+                    while (cursor.moveToNext()) {
+                        int id = cursor.getInt(0);
+                        String sexe2 = cursor.getString(1);
+                        double poids = cursor.getDouble(2);
+                        double taille = cursor.getDouble(3);
+                        int age = cursor.getInt(4);
+                        String activite = cursor.getString(5);
+
+                        System.out.println(id + " " + sexe2 + " " + age + " " +taille+ " " +poids+ " " +activite);
+                    }
+                    cursor.close();
+
+
                     Toast.makeText(ModifProfilActivity.this, "Paramètres enregistrés", Toast.LENGTH_SHORT).show();
                     System.out.println("Poids:" + poids.getText().toString());
                     System.out.println("Taille:" + taille.getText().toString());
                     System.out.println("Age:" + age.getText().toString());
                     System.out.println("Activité:" + spinner.getSelectedItem().toString());
-
-                    int selectedId = radioSexe.getCheckedRadioButtonId();
-
-                    if (selectedId == R.id.radioHomme) {
-                        System.out.println("Sexe: Homme");
-                    } else if (selectedId == R.id.radioFemme) {
-                        System.out.println("Sexe: Femme");
-                    }
-
 
 
                 }

@@ -6,11 +6,14 @@ import java.util.ArrayList;
 public class Produit implements Serializable {
 
     private String name;
+    private String image;
     private ArrayList<Nutriment>  nutriment;
 
-    public Produit(String name, ArrayList<Nutriment> nutiment){
+    public Produit(String name, String image,ArrayList<Nutriment> nutiment){
         this.name = name;
+        this.image = image;
         this.nutriment = nutiment;
+
     }
 
     public String getName() {
@@ -28,4 +31,14 @@ public class Produit implements Serializable {
     public void setNutriment(ArrayList<Nutriment> nutriment) {
         this.nutriment = nutriment;
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
 }

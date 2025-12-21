@@ -70,8 +70,8 @@ public class CalandrierActivity extends AppCompatActivity {
                 nutriments.add(new Nutriment("Lipide","10"));
                 nutriments.add(new Nutriment("Calories","10"));
 
-                Produit p = new Produit("Test", nutriments);
-                listeDuJour.add(p);
+               // Produit p = new Produit("Test", nutriments);
+                //listeDuJour.add(p);
             }
 
             adapteur.setListeRepas(listeDuJour);

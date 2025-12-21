@@ -7,6 +7,8 @@ public class Nutriment implements Serializable {
     private String nom;
     private String valeur;
 
+
+
     public Nutriment(String nom, String valeur){
         this.nom = nom;
         this.valeur = valeur;
@@ -20,6 +22,7 @@ public class Nutriment implements Serializable {
     public void setNom(String nom) {
         this.nom = nom;
     }
+
 
     public String getValeur() {
         return valeur;
