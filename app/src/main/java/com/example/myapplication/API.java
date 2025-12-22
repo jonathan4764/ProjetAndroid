@@ -36,7 +36,7 @@ public class API {
                 JSONObject nutriscore = product.getJSONObject("nutriscore");
                 JSONObject year2021 = nutriscore.getJSONObject("2021");
 
-                String grade = year2021.optString("grade");
+                String nutriscore2 = year2021.optString("grade");
 
                 String productName = product.optString("product_name");
 
@@ -49,32 +49,35 @@ public class API {
                 Log.d("Produit", "Allergènes : " + allergensText);
 
 
-                ArrayList<Nutriment> listnutiment = new ArrayList<>();
-                Nutriment proteine = new Nutriment("Protéines",nutriments.optString("proteins_100g"));
-                Nutriment glucide = new Nutriment("Glucides",nutriments.optString("carbohydrates_100g"));
-                Nutriment calories = new Nutriment("Calories",nutriments.optString("energy-kcal_100g"));
-                Nutriment energiekj = new Nutriment("EnergieKJ",nutriments.optString("energy-kj_100g"));
-                Nutriment graise = new Nutriment("MatiereGrase",nutriments.optString("fat_100g"));
-                Nutriment sel = new Nutriment("Sel",nutriments.optString("salt_100g"));
-                Nutriment graisesaturer = new Nutriment("MatiereGraseSature",nutriments.optString("saturated-fat_100g"));
-                Nutriment sodium = new Nutriment("Sodium",nutriments.optString("sodium_100g"));
-                Nutriment sucre = new Nutriment("Sucres",nutriments.optString("sugars_100g"));
-                Nutriment nutriscore2 = new Nutriment("NutriScore",grade);
+                double proteine = safeParseDouble(nutriments.optString("proteins_100g"));
+                double glucide = safeParseDouble(nutriments.optString("carbohydrates_100g"));
+                double calories = safeParseDouble(nutriments.optString("energy-kcal_100g"));
+                double energiekj = safeParseDouble(nutriments.optString("energy-kj_100g"));
+                double graise = safeParseDouble(nutriments.optString("fat_100g"));
+                double sel = safeParseDouble(nutriments.optString("salt_100g"));
+                double graisesaturer = safeParseDouble(nutriments.optString("saturated-fat_100g"));
+                double sodium = safeParseDouble(nutriments.optString("sodium_100g"));
+                double sucre = safeParseDouble(nutriments.optString("sugars_100g"));
 
 
-                listnutiment.add(proteine);
-                listnutiment.add(glucide);
-                listnutiment.add(calories);
-                listnutiment.add(energiekj);
-                listnutiment.add(graise);
-                listnutiment.add(sel);
-                listnutiment.add(graisesaturer);
-                listnutiment.add(sodium);
-                listnutiment.add(sucre);
-                listnutiment.add(nutriscore2);
 
 
-                Produit produit = new Produit(productName,imageUrl,listnutiment);
+                Produit produit = new Produit(
+                        productName,
+                        imageUrl,
+                        proteine,
+                        glucide,
+                        calories,
+                        energiekj,
+                        sel,
+                        sodium,
+                        sucre,
+                        graise,
+                        graisesaturer,
+                        nutriscore2,
+                        ingredientsText,
+                        allergensText
+                );
 
                 // Retourner le résultat via callback
                 callback.onSuccess(produit);
@@ -83,5 +86,23 @@ public class API {
                 callback.onError(e);
             }
         }).start();
+    }
+
+    private double safeParseDouble(String value) {
+        if (value == null) return 0.0;
+
+        value = value.trim();
+
+        if (value.isEmpty()) return 0.0;
+
+        // Remplace la virgule par un point (OpenFoodFacts le fait parfois)
+        value = value.replace(",", ".");
+
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            Log.w("PARSE", "Valeur invalide : " + value);
+            return 0.0;
+        }
     }
 }

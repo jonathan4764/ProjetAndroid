@@ -52,19 +52,34 @@ public class AnalyseAliment extends AppCompatActivity{
             Cursor cursor = helper.getAllProducts();
 
             while (cursor.moveToNext()) {
-                long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
-                String nom = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
-                String img = cursor.getString(cursor.getColumnIndexOrThrow("image"));
 
-                ArrayList<Nutriment> nutriments = helper.getNutrimentsByProduitId(id);
+                // Récupérer toutes les valeurs depuis le Cursor
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
+                String image = cursor.getString(cursor.getColumnIndexOrThrow("image"));
 
-                Produit p = new Produit(nom,img,nutriments);
+                double proteine = cursor.getDouble(cursor.getColumnIndexOrThrow("proteine"));
+                double glucide = cursor.getDouble(cursor.getColumnIndexOrThrow("glucide"));
+                double calorie = cursor.getDouble(cursor.getColumnIndexOrThrow("calorie"));
+                double energiekj = cursor.getDouble(cursor.getColumnIndexOrThrow("energiekj"));
+                double sel = cursor.getDouble(cursor.getColumnIndexOrThrow("sel"));
+                double sodium = cursor.getDouble(cursor.getColumnIndexOrThrow("sodium"));
+                double sucre = cursor.getDouble(cursor.getColumnIndexOrThrow("sucre"));
+                double matieregrasse = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrasse"));
+                double matieregrassesature = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrassesature"));
+
+                String nutriscore = cursor.getString(cursor.getColumnIndexOrThrow("nutriscore"));
+                String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("Ingrédients"));
+                String allergenes = cursor.getString(cursor.getColumnIndexOrThrow("allergenes"));
+
+                // Construire le produit à la fin
+                Produit p = new Produit(name, image, proteine, glucide, calorie, energiekj, sel, sodium, sucre, matieregrasse, matieregrassesature, nutriscore, ingrediants, allergenes
+                );
 
                 listeProduits.add(p);
             }
+
             cursor.close();
 
-            ArrayList<ProduitNutriment> listeProduits2 = new ArrayList<>();
 
             ProduitAdapteur adapter = new ProduitAdapteur(this,listeProduits);
             listView.setAdapter(adapter);
@@ -99,6 +114,7 @@ public class AnalyseAliment extends AppCompatActivity{
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Récupérer l'élément cliqué
                     Produit produit = (Produit)parent.getItemAtPosition(position);
+
 
                     // Ou lancer une nouvelle activité avec ce produit
                     Intent intent = new Intent(AnalyseAliment.this, AfficherProduit.class);
@@ -139,20 +155,7 @@ public class AnalyseAliment extends AppCompatActivity{
                                                 }
 
                                                 // Insère le produit
-                                                long idProduit = helper.insertProduit(product.getName(), product.getImage());
-
-                                                for (Nutriment n : product.getNutriment()) {
-                                                    // Récupère l'ID du nutriment existant
-                                                    long idNutriment = helper.getNutrimentsByName(n.getNom());
-
-                                                    // On ne fait rien si le nutriment n’existe pas dans la table nutriment
-                                                    if (idNutriment != -1) {
-                                                        helper.insertProduitNutriment(idProduit, idNutriment,n.getNom() ,n.getValeur());
-                                                    } else {
-                                                        // Optionnel : loguer un avertissement si le nutriment n'existe pas
-                                                        Log.w("DB", "Nutriment non trouvé dans la table: " + n.getNom());
-                                                    }
-                                                }
+                                                helper.insertProduit(product);
 
                                                 listeProduits.add(product);
                                                 adapter.notifyDataSetChanged();

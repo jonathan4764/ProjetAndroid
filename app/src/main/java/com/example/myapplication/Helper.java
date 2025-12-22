@@ -29,19 +29,20 @@ public class Helper extends SQLiteOpenHelper {
     public static final String COL_ID_PRODUIT = "id";
     public static final String COL_NAME = "nom";
     public static final String COL_IMAGE = "image";
+    public static final String COL_PROTEINE = "proteine";
+    public static final String COL_GLUCIDE = "glucide";
+    public static final String COL_CALORIE = "calorie";
+    public static final String COL_ENERGIE_KJ = "energiekj";
+    public static final String COL_SEL = "sel";
+    public static final String COL_SODIUM = "sodium";
+    public static final String COL_SUCRE = "sucre";
+    public static final String COL_MATIERE_GRASSE = "matieregrasse";
+    public static final String COL_MATIERE_GRASSE_SATURE = "matieregrassesature";
+    public static final String COL_NUTRISCORE = "nutriscore";
+    public static final String COL_INGREDIENTS = "ingredients";
+    public static final String COL_ALLERGENES = "allergenes";
 
-    // Info Table NUTRIMENT
-    public static final String TABLE_NUTRIMENT = "nutriment";
-    public static final String COL_ID_NUTRIMENT = "id";
-    public static final String COL_NOM = "nom";
 
-
-    // Info Table Produit_Nutriment
-    public static final String TABLE_PRODUIT_NUTRIMENT = "produit_nutriment";
-    public static final String COL_ID_NUTRIMENT_PRODUIT = "idproduit";
-    public static final String COL_ID_PRODUIT_NUTRIMENT = "idnutriment";
-    public static final String COL_VALEUR = "valeur";
-    public static final String COL_NOMNUTRIMENT = "valeur";
 
 
     // Info Table User_Produit
@@ -60,27 +61,8 @@ public class Helper extends SQLiteOpenHelper {
                     COL_POIDS + " REAL, " +
                     COL_ACTIVITE + " TEXT)";
 
-    private static final String CREATE_PRODUITS =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUIT + " (" +
-                    COL_ID_PRODUIT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COL_NAME + " TEXT, " +
-                    COL_IMAGE + " TEXT)";
-
-    private static final String CREATE_NUTRIMENTS =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_NUTRIMENT + " (" +
-                    COL_ID_NUTRIMENT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COL_NOM + " TEXT UNIQUE )";
 
 
-
-    private static final String CREATE_PRODUIT_NUTRIMENT =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_PRODUIT_NUTRIMENT + " (" +
-                    COL_ID_NUTRIMENT_PRODUIT + " INTEGER," +
-                    COL_ID_PRODUIT_NUTRIMENT + " INTEGER," +
-                    COL_VALEUR + " REAL," +
-                    "PRIMARY KEY (" + COL_ID_NUTRIMENT_PRODUIT + "," + COL_ID_PRODUIT_NUTRIMENT + "), " +
-                    "FOREIGN KEY (" + COL_ID_NUTRIMENT_PRODUIT + ") REFERENCES " +  TABLE_PRODUIT + "(" + COL_ID_PRODUIT + ")ON DELETE CASCADE, " +
-                    "FOREIGN KEY (" + COL_ID_PRODUIT_NUTRIMENT + ") REFERENCES " + TABLE_NUTRIMENT + "(" + COL_ID_NUTRIMENT + ") "+ "ON DELETE CASCADE)";
 
     private static final String CREATE_USER_PRODUIT =
             "CREATE TABLE IF NOT EXISTS " + TABLE_USER_PRODUIT + " (" +
@@ -90,7 +72,24 @@ public class Helper extends SQLiteOpenHelper {
                     "FOREIGN KEY (" + COL_ID_USER_PRODUIT + ") REFERENCES " +  TABLE_USERS + "(" + COL_ID_USERS + ")ON DELETE CASCADE, " +
                     "FOREIGN KEY (" + COL_ID_PRODUIT_USER + ") REFERENCES " + TABLE_PRODUIT + "(" + COL_ID_PRODUIT + ") "+ "ON DELETE CASCADE)";
 
-
+    private static final String CREATE_TABLE_PRODUIT =
+            "CREATE TABLE " + TABLE_PRODUIT + " (" +
+                    COL_ID_PRODUIT + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME + " TEXT UNIQUE, " +
+                    COL_IMAGE + " TEXT, " +
+                    COL_PROTEINE + " REAL, " +
+                    COL_GLUCIDE + " REAL, " +
+                    COL_CALORIE + " REAL, " +
+                    COL_ENERGIE_KJ + " REAL, " +
+                    COL_SEL + " REAL, " +
+                    COL_SODIUM + " REAL, " +
+                    COL_SUCRE + " REAL, " +
+                    COL_MATIERE_GRASSE + " REAL, " +
+                    COL_MATIERE_GRASSE_SATURE + " REAL, " +
+                    COL_NUTRISCORE + " TEXT, " +
+                    COL_INGREDIENTS + " TEXT, " +
+                    COL_ALLERGENES + " TEXT" +
+                    ")";
 
     public Helper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -108,11 +107,8 @@ public class Helper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("PRAGMA foreign_keys=ON");
         db.execSQL(CREATE_USERS);
-        db.execSQL(CREATE_PRODUITS);
-        db.execSQL(CREATE_NUTRIMENTS);
-        db.execSQL(CREATE_PRODUIT_NUTRIMENT);
+        db.execSQL(CREATE_TABLE_PRODUIT);
         db.execSQL(CREATE_USER_PRODUIT);
-        prefillNutriments(db);
     }
 
     @Override
@@ -124,74 +120,42 @@ public class Helper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_PRODUIT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUIT_NUTRIMENT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUTRIMENT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUIT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
 
-    private void prefillNutriments(SQLiteDatabase db) {
-        ContentValues values = new ContentValues();
-
-        // Exemple nutriments
-        values.put(COL_NOM, "Protéines");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "Glucides");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "Calories");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "EnergieKJ");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "Sucres");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "Sel");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "MatiereGrase");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "Sodium");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "MatiereGraseSature");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-        values.put(COL_NOM, "NutriScore");
-        db.insert(TABLE_NUTRIMENT, null, values);
-
-    }
 
 
-    public long insertProduit(String name, String image) {
+
+    public long insertProduit(Produit product) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(COL_NAME, name);
-        values.put(COL_IMAGE, image);
+        values.put("nom", product.getName());
+        values.put("image", product.getImage());
+        values.put("proteine", product.getProteine());
+        values.put("glucide", product.getGlucide());
+        values.put("calorie", product.getCalorie());
+        values.put("energiekj", product.getEnergiekj());
+        values.put("sel", product.getSel());
+        values.put("sodium", product.getSodium());
+        values.put("sucre", product.getSucre());
+        values.put("matieregrasse", product.getMatieregrasse());
+        values.put("matieregrassesature", product.getMatieregrassesature());
+        values.put("nutriscore", product.getNutriscore());
+        values.put("ingredients", product.getIngrediants());
+        values.put("allergenes", product.getAllergenes());
 
-
-        return db.insert(TABLE_PRODUIT, null, values);
+        // Insérer le produit dans la table et récupérer l'ID généré
+        long idProduit = db.insert("produit", null, values);
+        db.close();
+        return idProduit;
     }
 
 
 
-    public long insertProduitNutriment(long idnutriment, long idproduit, String nom,String valeur) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
 
-        values.put(COL_ID_NUTRIMENT_PRODUIT, idnutriment);
-        values.put(COL_VALEUR,valeur);
-        values.put(COL_ID_PRODUIT_NUTRIMENT,idproduit);
-        values.put(COL_NOMNUTRIMENT,nom);
-
-        return db.insert(TABLE_PRODUIT_NUTRIMENT, null, values);
-    }
 
     public long insertUser(String sexe, int age, double poids, double taille, String activite ) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -205,66 +169,60 @@ public class Helper extends SQLiteOpenHelper {
 
         return db.insert(TABLE_USERS, null, values);
     }
-    public long getNutrimentsByName(String name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        long id = 0;
 
-        String query = "SELECT id " +
-                "FROM " + TABLE_NUTRIMENT +
-                " WHERE " + COL_NOM + "= ?";
 
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(name)});
 
-        while (cursor.moveToNext()) {
-            id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
-
-        }
-
-        cursor.close();
-        return id;
-    }
-
-    public ArrayList<Nutriment> getNutrimentsByProduitId(long produitId) {
-        ArrayList<Nutriment> liste = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT n.id, n.nom, pn.valeur " +
-                "FROM nutriment n " +
-                "INNER JOIN produit_nutriment pn ON n.id = pn.idnutriment " +
-                "WHERE pn.idproduit = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(produitId)});
-
-        while (cursor.moveToNext()) {
-            String nom = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
-            String valeur = cursor.getString(cursor.getColumnIndexOrThrow("valeur"));
-            liste.add(new Nutriment(nom, valeur));
-        }
-
-        cursor.close();
-        return liste;
-    }
 
     public Produit getProductByName(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
         Produit produit = null;
 
         // Requête pour récupérer le produit par son nom
-        String query = "SELECT * FROM " + TABLE_PRODUIT + " WHERE " + COL_NAME + " = ?";
+        String query = "SELECT * FROM produit WHERE nom = ?";
         Cursor cursor = db.rawQuery(query, new String[]{name});
 
         if (cursor.moveToFirst()) { // Si le produit existe
-            long id = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID_PRODUIT));
-            String nom = cursor.getString(cursor.getColumnIndexOrThrow(COL_NAME));
-            String image = cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGE));
 
-            // Récupérer les nutriments associés
-            ArrayList<Nutriment> nutriments = getNutrimentsByProduitId(id);
+            // Récupération des valeurs depuis le Cursor
+            String image = cursor.getString(cursor.getColumnIndexOrThrow("image"));
+            double proteine = cursor.getDouble(cursor.getColumnIndexOrThrow("proteine"));
+            double glucide = cursor.getDouble(cursor.getColumnIndexOrThrow("glucide"));
+            double calorie = cursor.getDouble(cursor.getColumnIndexOrThrow("calorie"));
+            double energiekj = cursor.getDouble(cursor.getColumnIndexOrThrow("energiekj"));
+            double sel = cursor.getDouble(cursor.getColumnIndexOrThrow("sel"));
+            double sodium = cursor.getDouble(cursor.getColumnIndexOrThrow("sodium"));
+            double sucre = cursor.getDouble(cursor.getColumnIndexOrThrow("sucre"));
+            double matieregrasse = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrasse"));
+            double matieregrassesature = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrassesature"));
+            String nutriscore = cursor.getString(cursor.getColumnIndexOrThrow("nutriscore"));
+            String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("ingredients"));
+            String allergenes = cursor.getString(cursor.getColumnIndexOrThrow("allergenes"));
 
-            produit = new Produit(nom, image, nutriments);
+            // Construire le produit avec les valeurs récupérées
+            produit = new Produit(name, image, proteine, glucide,calorie, energiekj, sel, sodium, sucre,
+                    matieregrasse, matieregrassesature, nutriscore, ingrediants, allergenes
+            );
         }
 
         cursor.close();
         return produit;
+    }
+
+    public long getProduitIdByName(String nomProduit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long id = -1;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id FROM produit WHERE nom = ?",
+                new String[]{nomProduit}
+        );
+
+        if (cursor.moveToFirst()) {
+            id = cursor.getLong(0); // récupère la première colonne → id
+        }
+
+        cursor.close();
+        return id;
     }
 
     public Cursor getAllUsers() {

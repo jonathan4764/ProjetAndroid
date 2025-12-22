@@ -30,15 +30,15 @@ public class RepasAdapter extends RecyclerView.Adapter<RepasAdapter.ProduitViewH
 
     @Override
     public void onBindViewHolder(@NonNull ProduitViewHolder holder, int position) {
-        System.out.println("test");
+
         Produit produit = listeProduits.get(position);
-        System.out.println("test");
+
 
         holder.textNom.setText(produit.getName());
-        System.out.println("test");
 
+/*
         ArrayList<Nutriment> listeNutiment = produit.getNutriment();
-        System.out.println("test");
+
 
         // On initialise à 0 ou vide
         holder.textProteines.setText("Protéines: 0 g");
@@ -69,7 +69,7 @@ public class RepasAdapter extends RecyclerView.Adapter<RepasAdapter.ProduitViewH
                     break;
 
             }
-        }
+        }*/
 
     }
 

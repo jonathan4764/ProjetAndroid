@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,6 +86,9 @@ public class ModifProfilActivity extends AppCompatActivity {
                     System.out.println("Taille:" + taille.getText().toString());
                     System.out.println("Age:" + age.getText().toString());
                     System.out.println("Activité:" + spinner.getSelectedItem().toString());
+
+                    Intent intent = new Intent(ModifProfilActivity.this, RapportJourneeActivity.class);
+                    startActivity(intent);
 
 
                 }

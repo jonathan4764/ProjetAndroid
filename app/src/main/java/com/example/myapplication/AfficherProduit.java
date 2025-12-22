@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -12,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class AfficherProduit extends AppCompatActivity {
@@ -34,10 +38,27 @@ public class AfficherProduit extends AppCompatActivity {
 
         Produit produit = (Produit) getIntent().getSerializableExtra("product_name");
 
+
         nomProduitText.setText(produit.getName());
 
+        ArrayList<Nutriment> listeNutriments = new ArrayList<>();
 
-        ProduitInfoAdapteur adapter = new ProduitInfoAdapteur(this,produit.getNutriment());
+        listeNutriments.add(new Nutriment("Protéines", String.valueOf(produit.getProteine())));
+        listeNutriments.add(new Nutriment("Glucides", String.valueOf(produit.getGlucide())));
+        listeNutriments.add(new Nutriment("Calories", String.valueOf(produit.getCalorie())));
+        listeNutriments.add(new Nutriment("Énergie KJ", String.valueOf(produit.getEnergiekj())));
+        listeNutriments.add(new Nutriment("Sel", String.valueOf(produit.getSel())));
+        listeNutriments.add(new Nutriment("Sodium", String.valueOf(produit.getSodium())));
+        listeNutriments.add(new Nutriment("Sucres", String.valueOf(produit.getSucre())));
+        listeNutriments.add(new Nutriment("Matière grasse", String.valueOf(produit.getMatieregrasse())));
+        listeNutriments.add(new Nutriment("Graisses saturées", String.valueOf(produit.getMatieregrassesature())));
+        listeNutriments.add(new Nutriment("NutriScore", produit.getNutriscore()));
+        listeNutriments.add(new Nutriment("Ingrédients", produit.getIngrediants()));
+        listeNutriments.add(new Nutriment("Allergènes", produit.getAllergenes()));
+
+
+
+        ProduitInfoAdapteur adapter = new ProduitInfoAdapteur(this,listeNutriments);
         listView.setAdapter(adapter);
 
 

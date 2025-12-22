@@ -39,7 +39,7 @@ public class CalandrierActivity extends AppCompatActivity {
         Button  button4 = findViewById(R.id.btnProfil);
         Button  button5 = findViewById(R.id.bnthistorique);
         Button  button6 = findViewById(R.id.bntjournee);
-        RecyclerView recyclerView = findViewById(R.id.recyclerRepas);
+        //RecyclerView recyclerView = findViewById(R.id.recyclerRepas);
         CalendarView cv = findViewById(R.id.calendarHistorique);
 
         ArrayList<Produit> produit = new ArrayList<>();
@@ -48,10 +48,19 @@ public class CalandrierActivity extends AppCompatActivity {
 
 
         RepasAdapter adapteur = new RepasAdapter(produit);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapteur);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setAdapter(adapteur);
 
         cv.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+
+            month += 1;
+            String dateSelectionnee = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
+
+            Intent intent = new Intent(CalandrierActivity.this,RapportJourneeActivity.class);
+            intent.putExtra("date",dateSelectionnee);
+            startActivity(intent);
+
+            /*
             month += 1;
             String dateSelectionnee = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
 
@@ -74,7 +83,7 @@ public class CalandrierActivity extends AppCompatActivity {
                 //listeDuJour.add(p);
             }
 
-            adapteur.setListeRepas(listeDuJour);
+            adapteur.setListeRepas(listeDuJour);*/
         });
 
 

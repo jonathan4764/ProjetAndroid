@@ -30,7 +30,6 @@ public class ProduitInfoAdapteur extends ArrayAdapter<Nutriment> {
         Nutriment produit = produits.get(position);
 
 
-
         TextView textName = itemView.findViewById(R.id.textProduit);
         TextView textvaleur = itemView.findViewById(R.id.textView);
 
