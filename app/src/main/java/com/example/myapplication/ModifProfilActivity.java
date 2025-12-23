@@ -98,9 +98,10 @@ public class ModifProfilActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.niveau_activite,
-                android.R.layout.simple_spinner_item
+                R.layout.spinner_selected_white
         );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_white);
         spinner.setAdapter(adapter);
 
 

@@ -1,10 +1,13 @@
 package com.example.myapplication;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +38,43 @@ public class AfficherProduit extends AppCompatActivity {
 
         TextView nomProduitText = findViewById(R.id.textView3);
         ListView listView = findViewById(R.id.listeproduit);
+
+        Button button = findViewById(R.id.bntprofil);
+        Button button2 = findViewById(R.id.btnCalandrier);
+        Button button3 = findViewById(R.id.btnRepas);
+        Button button4 = findViewById(R.id.btnHistorique);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AfficherProduit.this,ModifProfil2.class);
+                startActivity(intent);
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AfficherProduit.this,CalandrierActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AfficherProduit.this,RapportJourneeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AfficherProduit.this,AnalyseAliment.class);
+                startActivity(intent);
+            }
+        });
 
         Produit produit = (Produit) getIntent().getSerializableExtra("product_name");
 

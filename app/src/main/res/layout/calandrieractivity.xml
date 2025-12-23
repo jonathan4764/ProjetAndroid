@@ -64,8 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Accueil"/>
+            android:text="@string/Historique"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/bntjournee"
@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Ajouter Repas"/>
+            android:text="@string/Repas"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/bntcalendrier"
@@ -82,8 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Statistiques"/>
+            android:text="@string/Calandrier"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnProfil"
@@ -91,8 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Profil"/>
+            android:text="@string/Profil"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

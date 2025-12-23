@@ -68,7 +68,7 @@ public class AnalyseAliment extends AppCompatActivity{
                 double matieregrassesature = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrassesature"));
 
                 String nutriscore = cursor.getString(cursor.getColumnIndexOrThrow("nutriscore"));
-                String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("Ingrédients"));
+                String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("ingredients"));
                 String allergenes = cursor.getString(cursor.getColumnIndexOrThrow("allergenes"));
 
                 // Construire le produit à la fin
@@ -87,7 +87,7 @@ public class AnalyseAliment extends AppCompatActivity{
             button3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(AnalyseAliment.this,ModifProfilActivity.class);
+                    Intent intent = new Intent(AnalyseAliment.this,ModifProfil2.class);
                     startActivity(intent);
                 }
             });

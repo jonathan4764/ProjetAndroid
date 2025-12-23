@@ -27,8 +27,15 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RapportJourneeActivity extends AppCompatActivity {
 
@@ -49,6 +56,19 @@ public class RapportJourneeActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        Button button5 = findViewById(R.id.btnHistorique);
+        Button button3 = findViewById(R.id.bntProfil);
+        ImageButton buttonpetitdejeuner = findViewById(R.id.btnPetitDejeune);
+        ImageButton buttondejeuner = findViewById(R.id.btnDejeune);
+        ImageButton buttondiner = findViewById(R.id.btnDiner);
+        ImageButton buttonencas = findViewById(R.id.btnEncas);
+
+        TextView textpetitdejeuner = findViewById(R.id.textpetitdejeuner);
+        TextView textdejeuner = findViewById(R.id.textdejeuner);
+        TextView textdiner = findViewById(R.id.textdiner);
+        TextView textencas = findViewById(R.id.textencas);
+
         Helper helper = Helper.getInstance(this);
 
         Cursor cursor = helper.getAllUsers();
@@ -62,23 +82,133 @@ public class RapportJourneeActivity extends AppCompatActivity {
             String activite = cursor.getString(cursor.getColumnIndexOrThrow("activite"));
 
 
-
-            Utilisateur utilisateur = new Utilisateur(sexe,age,taille,poids,activite);
+            Utilisateur utilisateur = new Utilisateur(sexe, age, taille, poids, activite);
 
             listeUtilisateurs.add(utilisateur);
         }
         cursor.close();
 
-        if(listeUtilisateurs.isEmpty()){
-            Intent intent = new Intent(RapportJourneeActivity.this,ModifProfilActivity.class);
+        if (listeUtilisateurs.isEmpty()) {
+            Intent intent = new Intent(RapportJourneeActivity.this, ModifProfilActivity.class);
             startActivity(intent);
         }
 
 
-
-        ImageButton calendrier = findViewById(R.id.btnCalendrier);
+        Button calendrier = findViewById(R.id.bntCalandrier);
         TextView date = findViewById(R.id.txtTitle);
-        date.setText(getIntent().getStringExtra("date"));
+
+        String date1 = getIntent().getStringExtra("date");
+        String datefinal = " ";
+
+        if (date1 == null || date1.isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRANCE);
+            String dateFormatee = sdf.format(calendar.getTime());
+            dateFormatee = dateFormatee.substring(0, 1).toUpperCase() + dateFormatee.substring(1);
+            date.setText(dateFormatee);
+            datefinal = dateFormatee;
+        } else {
+            SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRANCE);
+
+            try {
+                Date date3 = sdfInput.parse(date1);
+                String dateFormatee = sdfOutput.format(date3);
+                dateFormatee = dateFormatee.substring(0, 1).toUpperCase() + dateFormatee.substring(1);
+                date.setText(dateFormatee);
+                datefinal = dateFormatee;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        ArrayList<String> listerepas = new ArrayList<>();
+        listerepas.add("Petit déjeuner");
+        listerepas.add("Déjeuner");
+        listerepas.add("Dîner");
+        listerepas.add("En-cas");
+
+        String finalDatefinal = datefinal;
+        ArrayList<Long> listeproduitPetitDejeuner;
+        StringBuilder listproduit;
+
+        for (String repas : listerepas) {
+            switch (repas) {
+                case "Petit déjeuner":
+                    listeproduitPetitDejeuner = helper.getProduitCalendrier(finalDatefinal, "Petit déjeuner");
+
+                    if (listeproduitPetitDejeuner.isEmpty()) {
+                        textpetitdejeuner.setText("Aucun produit ajouté");
+                        break;
+                    }
+
+                    listproduit = new StringBuilder(" ");
+
+                    for (Long listeproduit : listeproduitPetitDejeuner) {
+                        Produit produit = helper.getProductById(listeproduit);
+                        listproduit.append(produit.getName());
+                    }
+                    textpetitdejeuner.setText(listproduit.toString());
+                    listeproduitPetitDejeuner.clear();
+                    break;
+                case "Déjeuner":
+                    listeproduitPetitDejeuner = helper.getProduitCalendrier(finalDatefinal, "Déjeuner");
+
+                    if (listeproduitPetitDejeuner.isEmpty()) {
+                        textdejeuner.setText("Aucun produit ajouté");
+                        break;
+                    }
+
+                    listproduit = new StringBuilder(" ");
+
+                    for (Long listeproduit : listeproduitPetitDejeuner) {
+                        Produit produit = helper.getProductById(listeproduit);
+                        listproduit.append(produit.getName());
+                    }
+                    textdejeuner.setText(listproduit.toString());
+                    listeproduitPetitDejeuner.clear();
+                    break;
+                case "Dîner":
+                    listeproduitPetitDejeuner = helper.getProduitCalendrier(finalDatefinal, "Dîner");
+
+                    if (listeproduitPetitDejeuner.isEmpty()) {
+                        textdiner.setText("Aucun produit ajouté");
+                        break;
+                    }
+
+                    listproduit = new StringBuilder(" ");
+
+                    for (Long listeproduit : listeproduitPetitDejeuner) {
+                        Produit produit = helper.getProductById(listeproduit);
+                        listproduit.append(produit.getName());
+                    }
+                    textdiner.setText(listproduit.toString());
+                    listeproduitPetitDejeuner.clear();
+                    break;
+                case "En-cas":
+                    listeproduitPetitDejeuner = helper.getProduitCalendrier(finalDatefinal, "En-cas");
+
+                    if (listeproduitPetitDejeuner.isEmpty()) {
+                        textencas.setText("Aucun produit ajouté");
+                        break;
+                    }
+
+                    listproduit = new StringBuilder(" ");
+
+                    for (Long listeproduit : listeproduitPetitDejeuner) {
+                        Produit produit = helper.getProductById(listeproduit);
+                        listproduit.append(produit.getName());
+                    }
+                    textencas.setText(listproduit.toString());
+                    listeproduitPetitDejeuner.clear();
+                    break;
+
+            }
+        }
+
+
+
 
         calendrier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +217,67 @@ public class RapportJourneeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,ModifProfil2.class);
+                startActivity(intent);
+            }
+        });
+
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,AnalyseAliment.class);
+                startActivity(intent);
+            }
+        });
+
+
+        buttonpetitdejeuner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,AjouterProduit.class);
+                intent.putExtra("date_journee", "Petit déjeuner");
+                intent.putExtra("date", finalDatefinal);
+                startActivity(intent);
+            }
+        });
+
+        buttondejeuner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,AjouterProduit.class);
+                intent.putExtra("date_journee", "Déjeuner");
+                intent.putExtra("date", finalDatefinal);
+                startActivity(intent);
+            }
+        });
+
+        buttondiner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,AjouterProduit.class);
+                intent.putExtra("date_journee", "Dîner");
+                intent.putExtra("date", finalDatefinal);
+                startActivity(intent);
+            }
+        });
+
+        buttonencas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RapportJourneeActivity.this,AjouterProduit.class);
+                intent.putExtra("date_journee", "En-cas");
+                intent.putExtra("date", finalDatefinal);
+                startActivity(intent);
+            }
+        });
+
+
+
+
 
 
 

@@ -137,7 +137,8 @@
                     <Spinner
                         android:id="@+id/spinnerActivite"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"/>
 
                     <!-- BOUTON -->
                     <Button
@@ -167,28 +168,31 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
+            android:id="@+id/btnHistorique"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
             android:text="@string/Historique"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/btnRepas"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:text="@string/Resumerdujour"
-            android:textColor="@android:color/white"/>
+            android:text="@string/Repas"
+            android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/btnCalandrier"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
             android:text="@string/Calandrier"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/bntprofil"

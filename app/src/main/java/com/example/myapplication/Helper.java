@@ -24,6 +24,14 @@ public class Helper extends SQLiteOpenHelper {
     public static final String COL_POIDS = "poids";
     public static final String COL_ACTIVITE = "activite";
 
+    // Info Table Calendrier
+    public static final String TABLE_CALENDRIER = "calendrier";
+    public static final String COL_ID_CALENDRIER = "id";
+    public static final String COL_ID_PRODUITS = "idproduit";
+    public static final String COL_DATE = "date";
+    public static final String COL_REPAS = "repas";
+    public static final String COL_QUANTITE = "quantite";
+
     // Info Table Produit
     public static final String TABLE_PRODUIT = "produit";
     public static final String COL_ID_PRODUIT = "id";
@@ -60,6 +68,15 @@ public class Helper extends SQLiteOpenHelper {
                     COL_TAILLE + " REAL, " +
                     COL_POIDS + " REAL, " +
                     COL_ACTIVITE + " TEXT)";
+
+    private static final String CREATE_CALENDRIER =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_CALENDRIER + " (" +
+                    COL_ID_CALENDRIER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_ID_PRODUITS + " INTEGER NOT NULL, " +
+                    COL_DATE + " TEXT NOT NULL, " +
+                    COL_REPAS + " TEXT NOT NULL, " +
+                    COL_QUANTITE + " REAL, " +
+                    "FOREIGN KEY(" + COL_ID_PRODUITS + ") REFERENCES produit(id))";
 
 
 
@@ -109,6 +126,7 @@ public class Helper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USERS);
         db.execSQL(CREATE_TABLE_PRODUIT);
         db.execSQL(CREATE_USER_PRODUIT);
+        db.execSQL(CREATE_CALENDRIER);
     }
 
     @Override
@@ -153,7 +171,18 @@ public class Helper extends SQLiteOpenHelper {
         return idProduit;
     }
 
+    public long insertCalendrier(long idProduit, String date, String repas, double quantite) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(COL_ID_PRODUITS, idProduit);
+        values.put(COL_DATE, date);
+        values.put(COL_REPAS, repas);
+        values.put(COL_QUANTITE, quantite);
+
+        // Insère et retourne l'ID de la ligne créée
+        return db.insert(TABLE_CALENDRIER, null, values);
+    }
 
 
 
@@ -168,6 +197,20 @@ public class Helper extends SQLiteOpenHelper {
         values.put(COL_ACTIVITE, activite);
 
         return db.insert(TABLE_USERS, null, values);
+    }
+
+    public int updateUser(Utilisateur utilisateur) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COL_SEXE, utilisateur.getSexe());
+        values.put(COL_AGE, utilisateur.getAge());
+        values.put(COL_POIDS, utilisateur.getPoids());
+        values.put(COL_TAILLE, utilisateur.getTaille());
+        values.put(COL_ACTIVITE, utilisateur.getActivite());
+
+
+        return db.update(TABLE_USERS, values, null, null);
     }
 
 
@@ -208,6 +251,42 @@ public class Helper extends SQLiteOpenHelper {
         return produit;
     }
 
+    public Produit getProductById(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Produit produit = null;
+
+        // Requête pour récupérer le produit par son nom
+        String query = "SELECT * FROM produit WHERE id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+
+        if (cursor.moveToFirst()) { // Si le produit existe
+
+            // Récupération des valeurs depuis le Cursor
+            String nom = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
+            String image = cursor.getString(cursor.getColumnIndexOrThrow("image"));
+            double proteine = cursor.getDouble(cursor.getColumnIndexOrThrow("proteine"));
+            double glucide = cursor.getDouble(cursor.getColumnIndexOrThrow("glucide"));
+            double calorie = cursor.getDouble(cursor.getColumnIndexOrThrow("calorie"));
+            double energiekj = cursor.getDouble(cursor.getColumnIndexOrThrow("energiekj"));
+            double sel = cursor.getDouble(cursor.getColumnIndexOrThrow("sel"));
+            double sodium = cursor.getDouble(cursor.getColumnIndexOrThrow("sodium"));
+            double sucre = cursor.getDouble(cursor.getColumnIndexOrThrow("sucre"));
+            double matieregrasse = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrasse"));
+            double matieregrassesature = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrassesature"));
+            String nutriscore = cursor.getString(cursor.getColumnIndexOrThrow("nutriscore"));
+            String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("ingredients"));
+            String allergenes = cursor.getString(cursor.getColumnIndexOrThrow("allergenes"));
+
+            // Construire le produit avec les valeurs récupérées
+            produit = new Produit(nom, image, proteine, glucide,calorie, energiekj, sel, sodium, sucre,
+                    matieregrasse, matieregrassesature, nutriscore, ingrediants, allergenes
+            );
+        }
+
+        cursor.close();
+        return produit;
+    }
+
     public long getProduitIdByName(String nomProduit) {
         SQLiteDatabase db = this.getReadableDatabase();
         long id = -1;
@@ -233,6 +312,28 @@ public class Helper extends SQLiteOpenHelper {
     public Cursor getAllProducts() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_PRODUIT, null);
+    }
+
+    public ArrayList<Long> getProduitCalendrier(String date, String repas) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Long> id = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM calendrier WHERE date = ? and repas = ?",
+                new String[]{date,repas}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                long idProduit = cursor.getLong(
+                        cursor.getColumnIndexOrThrow(COL_ID_PRODUITS)
+                );
+                id.add(idProduit);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return id;
     }
 
 }

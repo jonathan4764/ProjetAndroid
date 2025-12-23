@@ -10,7 +10,7 @@
     <!-- HEADER -->
     <LinearLayout
         android:id="@+id/header"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,14 +26,6 @@
             android:textColor="@android:color/white"
             android:textSize="22sp"
             android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/btnCalendrier"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_calendar" />
 
     </LinearLayout>
 
@@ -93,25 +85,28 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/petitdejeune"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Calories"
+                        android:text="@string/Petitdejeuner"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textpetitdejeuner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1200 kcal"
+                        android:text="@string/produitnonajouter"
                         android:textColor="@color/space_accent" />
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/btnPetitDejeune"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@android:drawable/ic_menu_add"
                     android:tint="@color/space_accent" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -139,23 +134,25 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Calories"
+                        android:text="@string/Dejeuner"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textdejeuner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1200 kcal"
+                        android:text="@string/produitnonajouter"
                         android:textColor="@color/space_accent" />
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/btnDejeune"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@android:drawable/ic_menu_add"
                     android:tint="@color/space_accent" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -181,25 +178,28 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/diner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Calories"
+                        android:text="@string/Diner"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textdiner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1200 kcal"
+                        android:text="@string/produitnonajouter"
                         android:textColor="@color/space_accent" />
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/btnDiner"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@android:drawable/ic_menu_add"
                     android:tint="@color/space_accent" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -225,25 +225,28 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/encas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Calories"
+                        android:text="@string/Encas"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textencas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1200 kcal"
+                        android:text="@string/produitnonajouter"
                         android:textColor="@color/space_accent" />
                 </LinearLayout>
 
                 <ImageButton
+                    android:id="@+id/btnEncas"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@android:drawable/ic_menu_add"
                     android:tint="@color/space_accent" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -264,36 +267,40 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
+            android:id="@+id/btnHistorique"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Accueil" />
+            android:text="@string/Historique"
+            android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/btnRepas"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Repas" />
+            android:text="@string/Repas"
+            android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/bntCalandrier"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Stats" />
+            android:text="@string/Calandrier"
+            android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/bntProfil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_space"
-            android:textColor="@android:color/white"
-            android:text="Profil" />
+            android:text="@string/Profil"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

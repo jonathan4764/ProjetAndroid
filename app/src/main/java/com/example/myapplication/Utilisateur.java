@@ -17,6 +17,8 @@ public class Utilisateur {
 
     }
 
+    public Utilisateur(){}
+
     public String getSexe() {
         return sexe;
     }

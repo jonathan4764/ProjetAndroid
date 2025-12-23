@@ -6,7 +6,13 @@
     <string name="Calories">Calories</string>
     <string name="Profil">Profil</string>
     <string name="Calandrier">Calandrier</string>
-    <string name="Resumerdujour">Resumerdujour</string>
+    <string name="Repas">Repas</string>
+    <string name="Petitdejeuner">Petit déjeuner</string>
+    <string name="Dejeuner">Déjeuner</string>
+    <string name="Diner">Dîner</string>
+    <string name="Encas">En-cas</string>
+    <string name="produitnonajouter">Aucun produit ajouté</string>
+    <string name="scanner">Scanner</string>
 
     <string-array name="niveau_activite">
         <item>Sédentaire</item>

@@ -47,7 +47,7 @@ public class CalandrierActivity extends AppCompatActivity {
 
 
 
-        RepasAdapter adapteur = new RepasAdapter(produit);
+
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //recyclerView.setAdapter(adapteur);
 
@@ -90,7 +90,7 @@ public class CalandrierActivity extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CalandrierActivity.this,ModifProfilActivity.class);
+                Intent intent = new Intent(CalandrierActivity.this,ModifProfil2.class);
                 startActivity(intent);
             }
         });
