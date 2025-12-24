@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -10,12 +11,16 @@
     <!-- HEADER -->
     <LinearLayout
         android:id="@+id/header"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:background="@color/space_card"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -26,235 +31,324 @@
             android:textColor="@android:color/white"
             android:textSize="22sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
-    <!-- GRAPH -->
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChartNutrition"
-        android:layout_width="0dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
-
-    <!-- TEXTVIEW ALIMENTATION -->
-    <TextView
-        android:id="@+id/txtAlimentation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Alimentation"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pieChartNutrition" />
-
-    <!-- STATS LIST -->
-    <LinearLayout
-        android:id="@+id/statsContainer"
+    <!-- CONTENU SCROLLABLE -->
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toTopOf="@id/bottomBar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtAlimentation">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/space_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
+            android:orientation="vertical">
 
+            <!-- PIE CHARTS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:layout_marginTop="16dp"
+                android:weightSum="2">
 
+                <!-- Glucides -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_marginEnd="8dp">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChartGlucide"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp" />
 
                     <TextView
-                        android:id="@+id/petitdejeune"
-                        android:layout_width="match_parent"
+                        android:id="@+id/chartTitleGlucide"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Petitdejeuner"
+                        android:text="Glucides"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textpetitdejeuner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/produitnonajouter"
-                        android:textColor="@color/space_accent" />
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/btnPetitDejeune"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_add"
-                    android:tint="@color/space_accent" />
+                <!-- Protéines -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_marginStart="8dp">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChartProteine"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp" />
+
+                    <TextView
+                        android:id="@+id/chartTitleProteine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Protéines"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/space_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
-
+            <!-- Calories (un seul graphique sur toute la largeur) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="16dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChartCalories"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"/>
+
+                <TextView
+                    android:id="@+id/chartCalories"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/Dejeuner"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textdejeuner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/produitnonajouter"
-                        android:textColor="@color/space_accent" />
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/btnDejeune"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_add"
-                    android:tint="@color/space_accent" />
+                    android:text="Calories"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/space_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
+            <!-- TEXTE ALIMENTATION -->
+            <TextView
+                android:id="@+id/txtAlimentation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Alimentation"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
 
+            <!-- CARDS REPAS -->
             <LinearLayout
+                android:id="@+id/statsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:orientation="vertical"
+                android:layout_marginTop="8dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <!-- Petit-déjeuner -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/space_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
 
-                    <TextView
-                        android:id="@+id/diner"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/Diner"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/textdiner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/produitnonajouter"
-                        android:textColor="@color/space_accent" />
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/btnDiner"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_add"
-                    android:tint="@color/space_accent" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:id="@+id/petitdejeune"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Petitdejeuner"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/space_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp">
+                            <TextView
+                                android:id="@+id/textpetitdejeuner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/produitnonajouter"
+                                android:textColor="@color/space_accent" />
+                        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                        <ImageButton
+                            android:id="@+id/btnPetitDejeune"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@android:color/transparent"
+                            android:src="@android:drawable/ic_menu_add"
+                            android:tint="@color/space_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <!-- Déjeuner -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/space_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
 
-                    <TextView
-                        android:id="@+id/encas"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/Encas"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/textencas"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Dejeuner"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textdejeuner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/produitnonajouter"
+                                android:textColor="@color/space_accent" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btnDejeune"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@android:color/transparent"
+                            android:src="@android:drawable/ic_menu_add"
+                            android:tint="@color/space_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Dîner -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/space_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/produitnonajouter"
-                        android:textColor="@color/space_accent" />
-                </LinearLayout>
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                <ImageButton
-                    android:id="@+id/btnEncas"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_add"
-                    android:tint="@color/space_accent" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/diner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Diner"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textdiner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/produitnonajouter"
+                                android:textColor="@color/space_accent" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btnDiner"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@android:color/transparent"
+                            android:src="@android:drawable/ic_menu_add"
+                            android:tint="@color/space_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Encas -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/space_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/encas"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Encas"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textencas"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/produitnonajouter"
+                                android:textColor="@color/space_accent" />
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/btnEncas"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@android:color/transparent"
+                            android:src="@android:drawable/ic_menu_add"
+                            android:tint="@color/space_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
-
-
-    <!-- 🛰️ BOTTOM BAR -->
+    <!-- BOTTOM BAR -->
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="0dp"

@@ -35,6 +35,18 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"/>
 
+    <!-- Valeur du produit -->
+    <TextView
+        android:id="@+id/textValeur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="0"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+
     <!-- Bouton Ajouter -->
     <ImageButton
         android:id="@+id/imageButton2"

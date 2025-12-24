@@ -83,18 +83,18 @@ public class AfficherProduit extends AppCompatActivity {
 
         ArrayList<Nutriment> listeNutriments = new ArrayList<>();
 
-        listeNutriments.add(new Nutriment("Protéines", String.valueOf(produit.getProteine())));
-        listeNutriments.add(new Nutriment("Glucides", String.valueOf(produit.getGlucide())));
-        listeNutriments.add(new Nutriment("Calories", String.valueOf(produit.getCalorie())));
-        listeNutriments.add(new Nutriment("Énergie KJ", String.valueOf(produit.getEnergiekj())));
-        listeNutriments.add(new Nutriment("Sel", String.valueOf(produit.getSel())));
-        listeNutriments.add(new Nutriment("Sodium", String.valueOf(produit.getSodium())));
-        listeNutriments.add(new Nutriment("Sucres", String.valueOf(produit.getSucre())));
-        listeNutriments.add(new Nutriment("Matière grasse", String.valueOf(produit.getMatieregrasse())));
-        listeNutriments.add(new Nutriment("Graisses saturées", String.valueOf(produit.getMatieregrassesature())));
-        listeNutriments.add(new Nutriment("NutriScore", produit.getNutriscore()));
-        listeNutriments.add(new Nutriment("Ingrédients", produit.getIngrediants()));
-        listeNutriments.add(new Nutriment("Allergènes", produit.getAllergenes()));
+        listeNutriments.add(new Nutriment("proteine", String.valueOf(produit.getProteine())));
+        listeNutriments.add(new Nutriment("glucide", String.valueOf(produit.getGlucide())));
+        listeNutriments.add(new Nutriment("calorie", String.valueOf(produit.getCalorie())));
+        listeNutriments.add(new Nutriment("energiekj", String.valueOf(produit.getEnergiekj())));
+        listeNutriments.add(new Nutriment("sel", String.valueOf(produit.getSel())));
+        listeNutriments.add(new Nutriment("sodium", String.valueOf(produit.getSodium())));
+        listeNutriments.add(new Nutriment("sucre", String.valueOf(produit.getSucre())));
+        listeNutriments.add(new Nutriment("matieregrasse", String.valueOf(produit.getMatieregrasse())));
+        listeNutriments.add(new Nutriment("matieregrassesature", String.valueOf(produit.getMatieregrassesature())));
+        listeNutriments.add(new Nutriment("nutriscore", produit.getNutriscore()));
+        listeNutriments.add(new Nutriment("ingredients", produit.getIngrediants()));
+        listeNutriments.add(new Nutriment("allergenes", produit.getAllergenes()));
 
 
 

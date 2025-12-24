@@ -171,6 +171,24 @@ public class Helper extends SQLiteOpenHelper {
         return idProduit;
     }
 
+    public int updateProduit(long idProduit, double valeur, String nom) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(nom, valeur);
+
+        int rows = db.update(
+                "produit",
+                values,
+                "id = ?",
+                new String[]{String.valueOf(idProduit)}
+        );
+
+        db.close();
+        return rows;
+    }
+
+
     public long insertCalendrier(long idProduit, String date, String repas, double quantite) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -213,7 +231,121 @@ public class Helper extends SQLiteOpenHelper {
         return db.update(TABLE_USERS, values, null, null);
     }
 
+    public int updateCalendrier(Calendrier calendrier) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        ContentValues values = new ContentValues();
+        values.put(COL_QUANTITE, calendrier.getValeur());
+
+        // WHERE id_calendrier = ?
+        return db.update(
+                TABLE_CALENDRIER,
+                values,
+                COL_ID_CALENDRIER + " = ?",
+                new String[]{String.valueOf(calendrier.getIdcalendrier())}
+        );
+    }
+
+    public long getProduitIdFromCalendrier(long idCalendrier) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long idProduit = -1;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT " + COL_ID_PRODUITS + " FROM " + TABLE_CALENDRIER + " WHERE " + COL_ID_CALENDRIER + " = ?",
+                new String[]{String.valueOf(idCalendrier)}
+        );
+
+        if (cursor.moveToFirst()) {
+            idProduit = cursor.getLong(0);
+        }
+
+        cursor.close();
+        return idProduit;
+    }
+
+    public long getCalendrierId(long idProduit, String date, String repas) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long idCalendrier = -1;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT " + COL_ID_CALENDRIER + " FROM " + TABLE_CALENDRIER +
+                        " WHERE " + COL_ID_PRODUITS + " = ? AND " + COL_DATE + " = ? AND " + COL_REPAS + " = ?",
+                new String[]{String.valueOf(idProduit), date, repas}
+        );
+
+        if (cursor.moveToFirst()) {
+            idCalendrier = cursor.getLong(0);
+        }
+
+        cursor.close();
+        return idCalendrier;
+    }
+
+    public ArrayList<Produit> getProduitsByDate(String date) {
+        ArrayList<Produit> produits = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT " + COL_ID_PRODUITS + " FROM " + TABLE_CALENDRIER + " WHERE " + COL_DATE + " = ?",
+                new String[]{ date }
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                long idProduit = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID_PRODUITS));
+                Produit produit = getProductById(idProduit);
+                if (produit != null) {
+                    produits.add(produit);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return produits;
+    }
+
+    public Calendrier getCalendrierById(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT * FROM calendrier WHERE id = ?",
+                new String[]{String.valueOf(id)}
+        );
+
+        if (c.moveToFirst()) {
+            Calendrier cal = new Calendrier();
+            cal.setIdcalendrier(c.getLong(0));
+            cal.setId(c.getLong(1));
+            cal.setDate(c.getString(2));
+            cal.setRepas(c.getString(3));
+            cal.setValeur(c.getFloat(4));
+            c.close();
+            return cal;
+        }
+        c.close();
+        return null;
+    }
+
+    public Calendrier getCalendrierByProduitIdAndDate(long produitId, String date, String repas) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Calendrier calendrier = null;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM calendrier WHERE id_produit = ? AND date = ? AND repas = ?",
+                new String[]{String.valueOf(produitId), date, repas}
+        );
+
+        if (cursor.moveToFirst()) {
+            calendrier = new Calendrier();
+            calendrier.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id_produit")));
+            calendrier.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
+            calendrier.setRepas(cursor.getString(cursor.getColumnIndexOrThrow("repas")));
+            calendrier.setValeur(cursor.getFloat(cursor.getColumnIndexOrThrow("valeur")));
+            calendrier.setIdcalendrier(cursor.getLong(cursor.getColumnIndexOrThrow("id"))); // id unique du calendrier
+        }
+
+        cursor.close();
+        return calendrier;
+    }
 
 
     public Produit getProductByName(String name) {
@@ -250,6 +382,8 @@ public class Helper extends SQLiteOpenHelper {
         cursor.close();
         return produit;
     }
+
+
 
     public Produit getProductById(long id) {
         SQLiteDatabase db = this.getReadableDatabase();

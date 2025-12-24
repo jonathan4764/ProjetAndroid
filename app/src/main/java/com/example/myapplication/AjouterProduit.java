@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 import java.util.ArrayList;
 
 public class AjouterProduit extends AppCompatActivity {
+
     String codefinal;
 
     @Override
@@ -41,85 +41,91 @@ public class AjouterProduit extends AppCompatActivity {
         ListView listView = findViewById(R.id.listViewItems);
 
         String date = getIntent().getStringExtra("date");
-
-
-
-        ArrayList<Produit> listeProduits = new ArrayList<>();
-
-        Calendrier calendrier = new Calendrier();
-
-        Helper helper = Helper.getInstance(AjouterProduit.this);
-
         String date_journee = getIntent().getStringExtra("date_journee");
         titre.setText(date_journee);
 
-        ProduitAdapteur2 adapter = new ProduitAdapteur2(this,listeProduits,calendrier);
+        Helper helper = Helper.getInstance(this);
+
+        // Crée la liste des produits avec idCalendrier
+        ArrayList<ProduitCalendrier> listeProduitsCalendrier = new ArrayList<>();
+        ArrayList<Long> idsCalendrier = helper.getProduitCalendrier(date, date_journee);
+        for (long idCal : idsCalendrier) {
+            Calendrier calendrier = helper.getCalendrierById(idCal);
+            long idProduit = helper.getProduitIdFromCalendrier(idCal);
+            Produit produit = helper.getProductById(idProduit);
+            listeProduitsCalendrier.add(new ProduitCalendrier(produit, calendrier));
+        }
+
+        // Passe la liste à l'adapter
+        ProduitAdapteur2 adapter = new ProduitAdapteur2(this, listeProduitsCalendrier);
         listView.setAdapter(adapter);
 
-
-
-
-
-
+        // Scanner le produit
         button2.setOnClickListener(view -> {
             GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
-                    .setBarcodeFormats(
-                            Barcode.FORMAT_EAN_13)
+                    .setBarcodeFormats(Barcode.FORMAT_EAN_13)
                     .build();
 
             GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this);
 
-            scanner
-                    .startScan()
-                    .addOnSuccessListener(
-                            barcode -> {
-                                // Task completed successfully
-                                String rawValue = barcode.getRawValue();
-                                codefinal = rawValue;
-                                API api = new API(codefinal);
-                                api.callAPI(new APICallback() {
-                                    @Override
-                                    public void onSuccess(Produit product) {
-                                        runOnUiThread(() -> {
+            scanner.startScan()
+                    .addOnSuccessListener(barcode -> {
+                        codefinal = barcode.getRawValue();
+                        API api = new API(codefinal);
 
-                                            // Vérifie si le produit existe déjà
-                                            Produit p = helper.getProductByName(product.getName());
-                                            if (p != null) {
-                                                Toast.makeText(AjouterProduit.this, "Vous avez déjà scanné ce produit", Toast.LENGTH_SHORT).show();
-                                                return;
-                                            }
-
-                                            // Insère le produit
-                                            helper.insertProduit(product);
-                                            listeProduits.add(product);
-
-                                            long id = helper.getProduitIdByName(product.getName());
-
-                                            calendrier.setDate(date);
-                                            calendrier.setId(id);
-                                            calendrier.setRepas(date_journee);
-                                            calendrier.setValeur(0);
-                                            adapter.notifyDataSetChanged();
-
-                                        });
+                        api.callAPI(new APICallback() {
+                            @Override
+                            public void onSuccess(Produit product) {
+                                runOnUiThread(() -> {
+                                    // Vérifie si le produit est déjà dans le repas
+                                    ArrayList<Long> produitsDuRepas = helper.getProduitCalendrier(date, date_journee);
+                                    boolean dejaPresent = false;
+                                    for (long idProduit : produitsDuRepas) {
+                                        Produit produitExistant = helper.getProductById(idProduit);
+                                        if (produitExistant != null &&
+                                                produitExistant.getName().equals(product.getName())) {
+                                            dejaPresent = true;
+                                            break;
+                                        }
                                     }
 
-                                    @Override
-                                    public void onError(Exception e) {
-                                        e.printStackTrace();
+                                    if (dejaPresent) {
+                                        Toast.makeText(
+                                                AjouterProduit.this,
+                                                "Produit déjà ajouté, vous pouvez modifier la quantité",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+                                        return;
                                     }
+
+                                    // Insère le produit si nécessaire
+                                    long idProduit = helper.getProduitIdByName(product.getName());
+                                    if (idProduit == -1) {
+                                        idProduit = helper.insertProduit(product);
+                                    }
+
+                                    // Insère le produit dans le calendrier
+                                    long idCalendrier = helper.insertCalendrier(idProduit, date, date_journee, 0);
+                                    Calendrier calendrier = helper.getCalendrierById(idCalendrier);
+
+                                    // Ajoute à la liste locale pour l'adapter
+                                    listeProduitsCalendrier.add(new ProduitCalendrier(product, calendrier));
+                                    adapter.notifyDataSetChanged();
                                 });
+                            }
 
-                            })
-                    .addOnCanceledListener(
-                            () -> {
-                                // Task canceled
-                            })
-                    .addOnFailureListener(
-                            e -> {
-                                // Task failed with an exception
-                            });
+                            @Override
+                            public void onError(Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    })
+                    .addOnCanceledListener(() -> {
+                        // Scan annulé
+                    })
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                    });
         });
-
     }
 }

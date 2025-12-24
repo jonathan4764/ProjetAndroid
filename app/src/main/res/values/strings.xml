@@ -16,9 +16,10 @@
 
     <string-array name="niveau_activite">
         <item>Sédentaire</item>
-        <item>Légèrement actif</item>
-        <item>Actif</item>
-        <item>Très actif</item>
+        <item>Léger</item>
+        <item>Modéré</item>
+        <item>Intense</item>
+        <item>Très Intense</item>
     </string-array>
 
 </resources>

@@ -5,12 +5,14 @@ import java.io.Serializable;
 public class Calendrier implements Serializable {
 
     private String date;
+    private long idcalendrier;
     private String repas;
     private long id;
     private double valeur;
 
-    public Calendrier(long id,String date,String repas,double valeur){
+    public Calendrier(long id, long idcalendrier, String date,String repas,double valeur){
         this.date = date;
+        this.idcalendrier = idcalendrier;
         this.id = id;
         this.repas = repas;
         this.valeur = valeur;
@@ -48,5 +50,13 @@ public class Calendrier implements Serializable {
 
     public void setValeur(double valeur) {
         this.valeur = valeur;
+    }
+
+    public long getIdcalendrier() {
+        return idcalendrier;
+    }
+
+    public void setIdcalendrier(long idcalendrier) {
+        this.idcalendrier = idcalendrier;
     }
 }

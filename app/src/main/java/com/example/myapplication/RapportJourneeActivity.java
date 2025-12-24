@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,15 +20,10 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -143,10 +136,13 @@ public class RapportJourneeActivity extends AppCompatActivity {
                         break;
                     }
 
-                    listproduit = new StringBuilder(" ");
+                    listproduit = new StringBuilder();
 
                     for (Long listeproduit : listeproduitPetitDejeuner) {
                         Produit produit = helper.getProductById(listeproduit);
+                        if (listproduit.length() > 0) {
+                            listproduit.append(", ");
+                        }
                         listproduit.append(produit.getName());
                     }
                     textpetitdejeuner.setText(listproduit.toString());
@@ -160,10 +156,14 @@ public class RapportJourneeActivity extends AppCompatActivity {
                         break;
                     }
 
-                    listproduit = new StringBuilder(" ");
+                    listproduit = new StringBuilder();
 
                     for (Long listeproduit : listeproduitPetitDejeuner) {
                         Produit produit = helper.getProductById(listeproduit);
+                        System.out.println(produit.getName());
+                        if (listproduit.length() > 0) {
+                            listproduit.append(", ");
+                        }
                         listproduit.append(produit.getName());
                     }
                     textdejeuner.setText(listproduit.toString());
@@ -177,10 +177,13 @@ public class RapportJourneeActivity extends AppCompatActivity {
                         break;
                     }
 
-                    listproduit = new StringBuilder(" ");
+                    listproduit = new StringBuilder();
 
                     for (Long listeproduit : listeproduitPetitDejeuner) {
                         Produit produit = helper.getProductById(listeproduit);
+                        if (listproduit.length() > 0) {
+                            listproduit.append(", ");
+                        }
                         listproduit.append(produit.getName());
                     }
                     textdiner.setText(listproduit.toString());
@@ -194,10 +197,13 @@ public class RapportJourneeActivity extends AppCompatActivity {
                         break;
                     }
 
-                    listproduit = new StringBuilder(" ");
+                    listproduit = new StringBuilder();
 
                     for (Long listeproduit : listeproduitPetitDejeuner) {
                         Produit produit = helper.getProductById(listeproduit);
+                        if (listproduit.length() > 0) {
+                            listproduit.append(", ");
+                        }
                         listproduit.append(produit.getName());
                     }
                     textencas.setText(listproduit.toString());
@@ -275,187 +281,169 @@ public class RapportJourneeActivity extends AppCompatActivity {
             }
         });
 
+        PieChart pieChartProteine = findViewById(R.id.pieChartProteine);
 
+        ArrayList<Produit> listeproduit = helper.getProduitsByDate(finalDatefinal);
 
+        double sommeProteine = 0;
+        double sommeGlucide = 0;
+        double sommeCalorie = 0;
 
+        for(Produit p : listeproduit){
+            ArrayList<Nutriment> listeNutriments = new ArrayList<>();
+                listeNutriments.add(new Nutriment("proteine", String.valueOf(p.getProteine())));
+                listeNutriments.add(new Nutriment("glucide", String.valueOf(p.getGlucide())));
+                listeNutriments.add(new Nutriment("calorie", String.valueOf(p.getCalorie())));
 
-
-
-/*
-        Button button2 = findViewById(R.id.btnScanner);
-        Button button = findViewById(R.id.button);
-
-        TextView proteine = findViewById(R.id.textValueProteines);
-        TextView calorie = findViewById(R.id.textValueCalorie);
-        TextView glucide = findViewById(R.id.textValueGlucides);
-        TextView sel = findViewById(R.id.textValueSel);
-        TextView sucre = findViewById(R.id.textValueSucres);
-        TextView sodium = findViewById(R.id.textValueSodium);
-        TextView matieregrasse = findViewById(R.id.textValueGraise);
-        TextView matieregrasesature = findViewById(R.id.textValueSatures);
-        TextView energiekj = findViewById(R.id.textValueEnergiekj);
-
-        EditText quantite = findViewById(R.id.editQuantite);
-
-
-        Helper helper = Helper.getInstance(RapportJourneeActivity.this);
-
-        /*PieChart pieChart = findViewById(R.id.pieChartNutrition);
-
-        pieChart.post(() -> {
-
-            List<PieEntry> entries = new ArrayList<>();
-
-            entries.add(new PieEntry(40f, "Protéines"));
-            entries.add(new PieEntry(30f, "Glucides"));
-            entries.add(new PieEntry(20f, "Lipides"));
-            entries.add(new PieEntry(10f, "Fibres"));
-
-            PieDataSet dataSet = new PieDataSet(entries, "Répartition des nutriments");
-            dataSet.setColors(new int[]{
-                    Color.RED,
-                    Color.BLUE,
-                    Color.GREEN,
-                    Color.YELLOW
-            });
-            dataSet.setValueTextSize(12f);
-
-            PieData pieData = new PieData(dataSet);
-
-            pieChart.setData(pieData);
-            pieChart.getDescription().setEnabled(false);
-            pieChart.setUsePercentValues(true);
-            pieChart.invalidate();
-        });
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String qStr = quantite.getText().toString().trim();
-
-                if (qStr.isEmpty()) {
-                    Toast.makeText(RapportJourneeActivity.this, "Veuillez entrer une quantité", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                double q = Double.parseDouble(qStr);
-
-                if(nutriment.isEmpty()){
-                    Toast.makeText(RapportJourneeActivity.this, "Vous avez pas scanner de produit", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                for(Nutriment n : nutriment){
-
-                    double valeur = safeParseDouble(n.getValeur());
-                    double result = (q * valeur) / 100;
-                    double valeurs = 0;
-
+                for(Nutriment n : listeNutriments){
                     switch (n.getNom()){
-                        case "Protéines":
-                            valeurs = safeParseDouble(proteine.getText().toString());
-                            proteine.setText(String.valueOf(result + valeurs));
+                        case "proteine":
+                            sommeProteine = sommeProteine + Double.parseDouble(n.getValeur());
                             break;
-                        case "Glucides":
-                            valeurs = safeParseDouble(glucide.getText().toString());
-                            glucide.setText(String.valueOf(result + valeurs));
+                        case "glucide":
+                            sommeGlucide = sommeGlucide + Double.parseDouble(n.getValeur());
                             break;
-                        case "Calories":
-                            valeurs = safeParseDouble(calorie.getText().toString());
-                            calorie.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "EnergieKJ":
-                            valeurs = safeParseDouble(energiekj.getText().toString());
-                            energiekj.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "MatiereGrase":
-                            valeurs = safeParseDouble(matieregrasse.getText().toString());
-                            matieregrasse.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "Sel":
-                            valeurs = safeParseDouble(sel.getText().toString());
-                            sel.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "MatiereGraseSature":
-                            valeurs = safeParseDouble(matieregrasesature.getText().toString());
-                            matieregrasesature.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "Sodium":
-                            valeurs = safeParseDouble(sodium.getText().toString());
-                            sodium.setText(String.valueOf(result + valeurs));
-                            break;
-                        case "Sucres":
-                            valeurs = safeParseDouble(sucre.getText().toString());
-                            sucre.setText(String.valueOf(result + valeurs));
-                            break;
+                        case "calorie":
+                            sommeCalorie = sommeCalorie + Double.parseDouble(n.getValeur());
 
                     }
 
                 }
-                listeProduits.clear();
-                nutriment.clear();
-            }
-        });
+
+        }
+
+        Utilisateur utilisateur = new Utilisateur();
+
+        Cursor cursor2 = helper.getAllUsers();
+
+        while (cursor2.moveToNext()) {
+
+            // Récupérer toutes les valeurs depuis le Cursor
+            String sexe2 = cursor2.getString(cursor2.getColumnIndexOrThrow("sexe"));
+            String poids2 = cursor2.getString(cursor2.getColumnIndexOrThrow("poids"));
+            String taille2 = cursor2.getString(cursor2.getColumnIndexOrThrow("taille"));
+            String age2 = cursor2.getString(cursor2.getColumnIndexOrThrow("age"));
+            String activite2 = cursor2.getString(cursor2.getColumnIndexOrThrow("activite"));
+
+            utilisateur.setActivite(activite2);
+            utilisateur.setAge(Integer.parseInt(age2));
+            utilisateur.setPoids(Double.parseDouble(poids2));
+            utilisateur.setTaille(Double.parseDouble(taille2));
+            utilisateur.setSexe(sexe2);
+
+        }
+
+        cursor2.close();
+
+        if(utilisateur.getSexe() != null){
+            CalculBesoin besoin = new CalculBesoin(utilisateur);
+
+            double besoinMinProteine = besoin.getMinProteine(utilisateur);
 
 
-        button2.setOnClickListener(view -> {
-            GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
-                    .setBarcodeFormats(
-                            Barcode.FORMAT_EAN_13)
-                    .build();
+            double besoinMinGlucide = besoin.getMinGlucides();
+            System.out.println(besoinMinGlucide);
 
-            GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(this);
+            double finalSommeProteine = sommeProteine;
+            pieChartProteine.post(() -> {
 
-            scanner
-                    .startScan()
-                    .addOnSuccessListener(
-                            barcode -> {
-                                // Task completed successfully
-                                String rawValue = barcode.getRawValue();
-                                codefinal = rawValue;
-                                API api = new API(codefinal);
-                                api.callAPI(new APICallback() {
-                                    @Override
-                                    public void onSuccess(Produit product) {
-                                        runOnUiThread(() -> {
-                                            nutriment = product.getNutriment();
-                                            // Insère le produit
-                                            long idProduit = helper.insertProduit(product.getName(), product.getImage());
+                List<PieEntry> entries = new ArrayList<>();
 
-                                            for (Nutriment n : product.getNutriment()) {
-                                                // Récupère l'ID du nutriment existant
-                                                long idNutriment = helper.getNutrimentsByName(n.getNom());
+                entries.add(new PieEntry((float)(besoinMinProteine-finalSommeProteine), ""));
+                entries.add(new PieEntry((float) finalSommeProteine, ""));
 
-                                                // On ne fait rien si le nutriment n’existe pas dans la table nutriment
-                                                if (idNutriment != -1) {
-                                                    helper.insertProduitNutriment(idProduit, idNutriment,n.getNom() ,n.getValeur());
-                                                } else {
-                                                    // Optionnel : loguer un avertissement si le nutriment n'existe pas
-                                                    Log.w("DB", "Nutriment non trouvé dans la table: " + n.getNom());
-                                                }
-                                            }
+                PieDataSet dataSet = new PieDataSet(entries, "");
+                dataSet.setColors(new int[]{
+                        Color.RED,
+                        Color.GREEN
+                });
+                dataSet.setValueTextSize(12f);
 
-                                            listeProduits.add(product);
+                PieData pieData = new PieData(dataSet);
+
+                dataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return String.format("%.1f g", value);
+                    }
+                });
+
+                pieChartProteine.setData(pieData);
+                pieChartProteine.getDescription().setEnabled(false);
+                pieChartProteine.setUsePercentValues(false);
+                pieChartProteine.getLegend().setEnabled(false);
+                pieChartProteine.invalidate();
+            });
+
+            PieChart pieChartGlucides = findViewById(R.id.pieChartGlucide);
+
+            double finalSommeGlucide = sommeGlucide;
+            System.out.println(finalSommeGlucide);
+            pieChartGlucides.post(() -> {
+
+                List<PieEntry> entries = new ArrayList<>();
+
+                entries.add(new PieEntry((float)(besoinMinGlucide-finalSommeGlucide), ""));
+                entries.add(new PieEntry((float) finalSommeGlucide, ""));
+
+                PieDataSet dataSet = new PieDataSet(entries, "Glucides");
+                dataSet.setColors(new int[]{
+                        Color.RED,
+                        Color.GREEN
+                });
+                dataSet.setValueTextSize(12f);
+
+                PieData pieData = new PieData(dataSet);
+
+                dataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return String.format("%.1f g", value);
+                    }
+                });
+
+                pieChartGlucides.setData(pieData);
+                pieChartGlucides.getDescription().setEnabled(false);
+                pieChartGlucides.setUsePercentValues(false);
+                pieChartGlucides.getLegend().setEnabled(false);
+                pieChartGlucides.invalidate();
+            });
+
+            PieChart pieChartCalories = findViewById(R.id.pieChartCalories);
+
+            pieChartCalories.post(() -> {
+
+                List<PieEntry> entries = new ArrayList<>();
+
+                entries.add(new PieEntry(40f, "Restant"));
+                entries.add(new PieEntry(30f, "Mangées"));
+
+                PieDataSet dataSet = new PieDataSet(entries, "Calories");
+                dataSet.setColors(new int[]{
+                        Color.RED,
+                        Color.GREEN
+                });
+                dataSet.setValueTextSize(12f);
+
+                PieData pieData = new PieData(dataSet);
+
+                dataSet.setValueFormatter(new ValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value) {
+                        return String.format("%.1f g", value);
+                    }
+                });
+
+                pieChartCalories.setData(pieData);
+                pieChartCalories.getDescription().setEnabled(false);
+                pieChartCalories.setUsePercentValues(false);
+                pieChartCalories.getLegend().setEnabled(false);
+                pieChartCalories.invalidate();
+            });
+        }
 
 
-                                        });
-                                    }
 
-                                    @Override
-                                    public void onError(Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                });
-
-                            })
-                    .addOnCanceledListener(
-                            () -> {
-                                // Task canceled
-                            })
-                    .addOnFailureListener(
-                            e -> {
-                                // Task failed with an exception
-                            });
-        });*/
     }
 
     private double safeParseDouble(String value) {

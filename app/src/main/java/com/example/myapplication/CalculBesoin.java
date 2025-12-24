@@ -12,13 +12,14 @@ public class CalculBesoin {
 
     public CalculBesoin(Utilisateur utilistaeur){
         this.utilisateur = utilistaeur;
-
+        this.mb = calculMB(utilisateur);
+        this.bet = calculFacteurActivite(utilisateur);
     }
 
 
     public double calculMB(Utilisateur utilisateur){
 
-        if(utilisateur.getSexe() == "Homme"){
+        if(utilisateur.getSexe().equals("Homme")){
             mb = 10*utilisateur.getPoids() + 6.25 * utilisateur.getTaille() - 5*utilisateur.getAge()+5;
         }else{
             mb = 10*utilisateur.getPoids() + 6.25 * utilisateur.getTaille() - 5*utilisateur.getAge() - 161;;
@@ -43,12 +44,9 @@ public class CalculBesoin {
     }
 
     public double getMinProteine(Utilisateur utilisateur){
-        return 0.8*utilisateur.getPoids();
+        return 1*utilisateur.getPoids();
     }
 
-    public double getMaxProteine(Utilisateur utilisateur){
-        return 1.2*utilisateur.getPoids();
-    }
 
     public double getSel(){
         return 5.0;
@@ -74,13 +72,11 @@ public class CalculBesoin {
 
     // 1g --> 4kcal
     public double getMinGlucides(){
-        return (0.45*bet)/4;
+        return (0.50*bet)/4;
     }
 
     // 1g --> 4kcal
-    public double getMaxGlucides(){
-        return (0.55*bet)/4;
-    }
+
 
 
 

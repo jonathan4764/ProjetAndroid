@@ -16,17 +16,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 
-public class ProduitAdapteur2 extends ArrayAdapter {
-
+public class ProduitAdapteur2 extends ArrayAdapter<ProduitCalendrier> {
     private Context context;
-    private  ArrayList<Produit> produits;
-    private Calendrier calendrier;
+    private ArrayList<ProduitCalendrier> produits;
 
-    public ProduitAdapteur2(Context context, ArrayList<Produit> produits,Calendrier calendrier) {
+    public ProduitAdapteur2(Context context, ArrayList<ProduitCalendrier> produits) {
         super(context, R.layout.produit, produits);
         this.context = context;
         this.produits = produits;
-        this.calendrier = calendrier;
     }
 
     @Override
@@ -36,21 +33,23 @@ public class ProduitAdapteur2 extends ArrayAdapter {
             itemView = LayoutInflater.from(context).inflate(R.layout.produit2, parent, false);
         }
 
-        // Récupérer les vues
         TextView textProduit = itemView.findViewById(R.id.textProduit);
         ImageView imageProduit = itemView.findViewById(R.id.imageProduit);
         ImageButton ajouter = itemView.findViewById(R.id.imageButton2);
+        TextView textvaleur = itemView.findViewById(R.id.textValeur);
 
-        // Récupérer le produit à la position actuelle
-        Produit p = produits.get(position);
+        ProduitCalendrier pc = produits.get(position);
+        Produit p = pc.getProduit();
 
-        // Nom du produit
+        Calendrier calendrier = pc.getIdCalendrier(); // c'est déjà le calendrier
+        textvaleur.setText(calendrier.getValeur() + "g");
+
+
         textProduit.setText(p.getName());
 
-        // Image du produit (URL)
+        // Image
         String imageUrl = p.getImage();
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            // Exemple simple sans Glide : télécharger en arrière-plan
             new Thread(() -> {
                 try {
                     InputStream input = new java.net.URL(imageUrl).openStream();
@@ -63,14 +62,13 @@ public class ProduitAdapteur2 extends ArrayAdapter {
         }
 
         ajouter.setOnClickListener(v -> {
-
-            // Par exemple, lancer une nouvelle activité avec ce produit
             Intent intent = new Intent(context, VoirProduitAjouter.class);
-            intent.putExtra("product_name2",p.getName());
-            intent.putExtra("calendrier",calendrier);
+            intent.putExtra("product_name2", p.getName());
+            intent.putExtra("id_calendrier", calendrier.getIdcalendrier());
             context.startActivity(intent);
         });
 
         return itemView;
     }
 }
+
