@@ -86,7 +86,7 @@
             android:textColor="@android:color/white" />
 
         <Button
-            android:id="@+id/btnProfil"
+            android:id="@+id/bntprofil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

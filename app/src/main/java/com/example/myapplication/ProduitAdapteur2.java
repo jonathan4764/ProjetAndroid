@@ -36,6 +36,7 @@ public class ProduitAdapteur2 extends ArrayAdapter<ProduitCalendrier> {
         TextView textProduit = itemView.findViewById(R.id.textProduit);
         ImageView imageProduit = itemView.findViewById(R.id.imageProduit);
         ImageButton ajouter = itemView.findViewById(R.id.imageButton2);
+        ImageButton supprimer = itemView.findViewById(R.id.imageButton3);
         TextView textvaleur = itemView.findViewById(R.id.textValeur);
 
         ProduitCalendrier pc = produits.get(position);
@@ -43,8 +44,6 @@ public class ProduitAdapteur2 extends ArrayAdapter<ProduitCalendrier> {
 
         Calendrier calendrier = pc.getIdCalendrier(); // c'est déjà le calendrier
         textvaleur.setText(calendrier.getValeur() + "g");
-
-
         textProduit.setText(p.getName());
 
         // Image
@@ -66,6 +65,22 @@ public class ProduitAdapteur2 extends ArrayAdapter<ProduitCalendrier> {
             intent.putExtra("product_name2", p.getName());
             intent.putExtra("id_calendrier", calendrier.getIdcalendrier());
             context.startActivity(intent);
+        });
+
+        supprimer.setOnClickListener(v -> {
+
+            long idCalendrier = pc.getIdCalendrier().getIdcalendrier();
+
+            Helper helper = Helper.getInstance(getContext());
+
+            // 1️⃣ Supprimer en base
+            helper.deleteCalendrierById(idCalendrier);
+
+            // 2️⃣ Supprimer de la liste
+            remove(pc);
+
+            // 3️⃣ Rafraîchir l'affichage
+            notifyDataSetChanged();
         });
 
         return itemView;

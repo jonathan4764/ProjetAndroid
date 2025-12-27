@@ -188,6 +188,30 @@ public class Helper extends SQLiteOpenHelper {
         return rows;
     }
 
+    public ArrayList<Long> getCalendrierIds(String date, String repas) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Long> ids = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id FROM calendrier WHERE date = ? AND repas = ?",
+                new String[]{date, repas}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getLong(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return ids;
+    }
+
+    public void deleteCalendrierById(long idCalendrier) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("calendrier", "id = ?", new String[]{String.valueOf(idCalendrier)});
+    }
+
 
     public long insertCalendrier(long idProduit, String date, String repas, double quantite) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -325,22 +349,47 @@ public class Helper extends SQLiteOpenHelper {
         return null;
     }
 
+    public ArrayList<Calendrier> getCalendriersByDateAndRepas(String date, String repas) {
+        ArrayList<Calendrier> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery(
+                "SELECT * FROM calendrier WHERE date = ? AND repas = ?",
+                new String[]{date, repas}
+        );
+
+        if (c.moveToFirst()) {
+            do {
+                Calendrier cal = new Calendrier();
+                cal.setIdcalendrier(c.getLong(c.getColumnIndexOrThrow("id")));
+                cal.setId(c.getLong(c.getColumnIndexOrThrow("idproduit")));
+                cal.setDate(c.getString(c.getColumnIndexOrThrow("date")));
+                cal.setRepas(c.getString(c.getColumnIndexOrThrow("repas")));
+                cal.setValeur(c.getFloat(c.getColumnIndexOrThrow("quantite")));
+                list.add(cal);
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        return list;
+    }
+
     public Calendrier getCalendrierByProduitIdAndDate(long produitId, String date, String repas) {
         SQLiteDatabase db = this.getReadableDatabase();
         Calendrier calendrier = null;
 
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM calendrier WHERE id_produit = ? AND date = ? AND repas = ?",
+                "SELECT * FROM calendrier WHERE idproduit = ? AND date = ? AND repas = ?",
                 new String[]{String.valueOf(produitId), date, repas}
         );
 
         if (cursor.moveToFirst()) {
             calendrier = new Calendrier();
-            calendrier.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id_produit")));
+            calendrier.setId(cursor.getLong(cursor.getColumnIndexOrThrow("idproduit")));
             calendrier.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
             calendrier.setRepas(cursor.getString(cursor.getColumnIndexOrThrow("repas")));
-            calendrier.setValeur(cursor.getFloat(cursor.getColumnIndexOrThrow("valeur")));
-            calendrier.setIdcalendrier(cursor.getLong(cursor.getColumnIndexOrThrow("id"))); // id unique du calendrier
+            calendrier.setValeur(cursor.getFloat(cursor.getColumnIndexOrThrow("quantite")));
+            calendrier.setIdcalendrier(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
         }
 
         cursor.close();
@@ -448,20 +497,40 @@ public class Helper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM " + TABLE_PRODUIT, null);
     }
 
+    public Cursor getAllProductsCalendrier() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_CALENDRIER, null);
+    }
+
     public ArrayList<Long> getProduitCalendrier(String date, String repas) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Long> id = new ArrayList<>();
 
+
         Cursor cursor = db.rawQuery(
-                "SELECT * FROM calendrier WHERE date = ? and repas = ?",
-                new String[]{date,repas}
+                "SELECT * FROM calendrier WHERE TRIM(date) = TRIM(?) AND TRIM(repas) = TRIM(?)",
+                new String[]{date, repas}
         );
+
 
         if (cursor.moveToFirst()) {
             do {
-                long idProduit = cursor.getLong(
-                        cursor.getColumnIndexOrThrow(COL_ID_PRODUITS)
-                );
+
+                String date2 = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                String repas2 = cursor.getString(cursor.getColumnIndexOrThrow("repas"));
+
+
+                System.out.println("date:" + date);
+                System.out.println("repas:" + repas);
+                System.out.println("date2:" + date2);
+                System.out.println("repas2:" + repas2);
+
+                System.out.println("egaledate" + date.equals(date2));
+                System.out.println("egalerepas" + repas.equals(repas2));
+
+
+                long idProduit = cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID_PRODUITS));
+                System.out.println("id:" + idProduit);
                 id.add(idProduit);
             } while (cursor.moveToNext());
         }

@@ -77,7 +77,9 @@ public class CalculBesoin {
 
     // 1g --> 4kcal
 
-
+public double getBet(){
+        return bet;
+}
 
 
     public Utilisateur getUtilisateur() {

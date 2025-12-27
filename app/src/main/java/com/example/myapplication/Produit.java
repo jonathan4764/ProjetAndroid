@@ -37,6 +37,10 @@ public class Produit implements Serializable {
         this.allergenes = allergenes;
     }
 
+    public Produit(String name){
+        this.name = name;
+    }
+
 
     public String getName() {
         return name;

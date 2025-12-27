@@ -18,6 +18,12 @@ public class Calendrier implements Serializable {
         this.valeur = valeur;
     }
 
+    public Calendrier(String date,String repas){
+        this.date = date;
+        this.repas = repas;
+    }
+
+
     public Calendrier(){}
 
     public String getDate() {

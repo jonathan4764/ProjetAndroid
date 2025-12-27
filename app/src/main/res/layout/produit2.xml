@@ -56,4 +56,13 @@
         android:padding="8dp"
         app:srcCompat="@android:drawable/ic_menu_add"
         android:contentDescription="Ajouter"/>
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_space"
+        android:contentDescription="Supprimer"
+        android:padding="8dp"
+        app:srcCompat="@android:drawable/ic_delete" />
 </LinearLayout>

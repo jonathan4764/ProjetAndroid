@@ -165,6 +165,9 @@ public class AnalyseAliment extends AppCompatActivity{
 
                                         @Override
                                         public void onError(Exception e) {
+                                            runOnUiThread(() -> {
+                                                Toast.makeText(AnalyseAliment.this, "Erreur scan réessayez", Toast.LENGTH_SHORT).show();
+                                            });
                                             e.printStackTrace();
                                         }
                                     });

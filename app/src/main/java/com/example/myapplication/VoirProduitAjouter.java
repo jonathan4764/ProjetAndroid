@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -91,9 +92,7 @@ public class VoirProduitAjouter extends AppCompatActivity {
         listeNutriments.add(new Nutriment("sucre", String.valueOf(produit.getSucre())));
         listeNutriments.add(new Nutriment("matieregrasse", String.valueOf(produit.getMatieregrasse())));
         listeNutriments.add(new Nutriment("matieregrassesature", String.valueOf(produit.getMatieregrassesature())));
-        listeNutriments.add(new Nutriment("nutriscore", produit.getNutriscore()));
-        listeNutriments.add(new Nutriment("ingredients", produit.getIngrediants()));
-        listeNutriments.add(new Nutriment("allergenes", produit.getAllergenes()));
+
 
 
 
@@ -133,6 +132,31 @@ public class VoirProduitAjouter extends AppCompatActivity {
                 cal.setValeur(qte);
 
                 helper.updateCalendrier(cal);
+
+
+                Cursor cursor = helper.getAllProductsCalendrier();
+
+                while (cursor.moveToNext()) {
+
+                    // Récupérer toutes les valeurs depuis le Cursor
+                    String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+                    String idproduit2 = cursor.getString(cursor.getColumnIndexOrThrow("idproduit"));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                    String repas = cursor.getString(cursor.getColumnIndexOrThrow("repas"));
+                    String quantite = cursor.getString(cursor.getColumnIndexOrThrow("quantite"));
+
+
+
+                    System.out.println(id);
+                    System.out.println(idproduit2);
+                    System.out.println(date);
+                    System.out.println(repas);
+                    System.out.println(quantite);
+
+
+                }
+
+                cursor.close();
 
                 Intent intent = new Intent(VoirProduitAjouter.this,RapportJourneeActivity.class);
                 intent.putExtra("date", finalDateISO);

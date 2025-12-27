@@ -339,12 +339,12 @@ public class RapportJourneeActivity extends AppCompatActivity {
             CalculBesoin besoin = new CalculBesoin(utilisateur);
 
             double besoinMinProteine = besoin.getMinProteine(utilisateur);
-
-
             double besoinMinGlucide = besoin.getMinGlucides();
-            System.out.println(besoinMinGlucide);
-
+            double besoincalories = besoin.getBet();
             double finalSommeProteine = sommeProteine;
+            double finalSommeCalories = sommeCalorie;
+            double finalSommeGlucide = sommeGlucide;
+
             pieChartProteine.post(() -> {
 
                 List<PieEntry> entries = new ArrayList<>();
@@ -377,7 +377,7 @@ public class RapportJourneeActivity extends AppCompatActivity {
 
             PieChart pieChartGlucides = findViewById(R.id.pieChartGlucide);
 
-            double finalSommeGlucide = sommeGlucide;
+
             System.out.println(finalSommeGlucide);
             pieChartGlucides.post(() -> {
 
@@ -409,16 +409,17 @@ public class RapportJourneeActivity extends AppCompatActivity {
                 pieChartGlucides.invalidate();
             });
 
+
             PieChart pieChartCalories = findViewById(R.id.pieChartCalories);
 
             pieChartCalories.post(() -> {
 
                 List<PieEntry> entries = new ArrayList<>();
 
-                entries.add(new PieEntry(40f, "Restant"));
-                entries.add(new PieEntry(30f, "Mangées"));
+                entries.add(new PieEntry((float) (besoincalories-finalSommeCalories), ""));
+                entries.add(new PieEntry((float) finalSommeCalories, ""));
 
-                PieDataSet dataSet = new PieDataSet(entries, "Calories");
+                PieDataSet dataSet = new PieDataSet(entries, "");
                 dataSet.setColors(new int[]{
                         Color.RED,
                         Color.GREEN
@@ -430,7 +431,7 @@ public class RapportJourneeActivity extends AppCompatActivity {
                 dataSet.setValueFormatter(new ValueFormatter() {
                     @Override
                     public String getFormattedValue(float value) {
-                        return String.format("%.1f g", value);
+                        return String.format("%.1f kcal", value);
                     }
                 });
 

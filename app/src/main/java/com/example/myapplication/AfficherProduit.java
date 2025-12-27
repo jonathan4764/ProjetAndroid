@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +39,8 @@ public class AfficherProduit extends AppCompatActivity {
 
         TextView nomProduitText = findViewById(R.id.textView3);
         ListView listView = findViewById(R.id.listeproduit);
+
+        ImageView image = findViewById(R.id.imageView4);
 
         Button button = findViewById(R.id.bntprofil);
         Button button2 = findViewById(R.id.btnCalandrier);
@@ -80,6 +83,20 @@ public class AfficherProduit extends AppCompatActivity {
 
 
         nomProduitText.setText(produit.getName());
+
+        String imageUrl = produit.getImage();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            new Thread(() -> {
+                try {
+                    InputStream input = new java.net.URL(imageUrl).openStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(input);
+                    image.post(() -> image.setImageBitmap(bitmap));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
 
         ArrayList<Nutriment> listeNutriments = new ArrayList<>();
 

@@ -12,14 +12,6 @@
     android:padding="12dp">
 
     <!-- Image du produit -->
-    <ImageView
-        android:id="@+id/imageProduit"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/btn_space"
-        android:contentDescription="Image du produit"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_foreground" />
 
     <!-- Nom du produit -->
     <TextView
