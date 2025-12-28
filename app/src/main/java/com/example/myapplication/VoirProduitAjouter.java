@@ -41,6 +41,11 @@ public class VoirProduitAjouter extends AppCompatActivity {
             return insets;
         });
 
+        Button button = findViewById(R.id.btnRepas);
+        Button button2 = findViewById(R.id.btnCalendriers);
+        Button button3 = findViewById(R.id.btnHistorique);
+        Button button4 = findViewById(R.id.bntprofil);
+
         TextView titre = findViewById(R.id.textProduit);
         TextView quantite = findViewById(R.id.textPour100g);
 
@@ -179,12 +184,46 @@ public class VoirProduitAjouter extends AppCompatActivity {
                 }
 
                 cursor.close();
+                Intent intent = new Intent(VoirProduitAjouter.this,VoirProduitAjouter.class);
+                intent.putExtra("product_name2", nom);
+                intent.putExtra("id_calendrier", idCalendrier);
+                startActivity(intent);
 
+            }
+
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(VoirProduitAjouter.this,RapportJourneeActivity.class);
                 intent.putExtra("date", finalDateISO);
                 startActivity(intent);
             }
+        });
 
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VoirProduitAjouter.this,CalandrierActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VoirProduitAjouter.this,AnalyseAliment.class);
+                startActivity(intent);
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VoirProduitAjouter.this,ModifProfil2.class);
+                startActivity(intent);
+            }
         });
 
 }
