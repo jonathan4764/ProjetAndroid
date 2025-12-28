@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -112,79 +110,95 @@ public class AjouterProduit extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     listView.setVisibility(View.GONE);
                     listViewRecherche.setVisibility(View.VISIBLE);
-                    API api = new API(recherche.getText().toString());
-                    api.rechercherProduitOpenFoodFacts(new APICallback() {
-                        @Override
-                        public void onSuccess(Produit product) {
-                            runOnUiThread(() -> {
-                                produitsRecherche.clear();
-                                // Vérifie si le produit est déjà dans le repas
-                                ArrayList<Long> produitsDuRepas = helper.getProduitCalendrier(date, date_journee);
-                                boolean dejaPresent = false;
-                                for (long idProduit : produitsDuRepas) {
-                                    Produit produitExistant = helper.getProductById(idProduit);
-                                    if (produitExistant != null &&
-                                            produitExistant.getName().equals(product.getName())) {
-                                        dejaPresent = true;
-                                        break;
+
+                    Produit p = helper.getProductByName(query);
+                    if (p != null) {
+
+                        long idProduct = helper.getProduitIdByName(p.getName());
+                        // Insère le produit dans le calendrier
+                        long idCalendrier = helper.insertCalendrier(idProduct, date, date_journee, 0);
+                        Calendrier calendrier = helper.getCalendrierById(idCalendrier);
+
+                        // Ajoute à la liste locale pour l'adapter
+                        produitsRecherche.add(new ProduitCalendrier(p, calendrier));
+                        adapterRecherche.notifyDataSetChanged();
+                        listViewRecherche.setVisibility(View.VISIBLE);
+                    }else{
+                        API api = new API(recherche.getText().toString());
+                        api.rechercherProduitOpenFoodFacts(new APICallback() {
+                            @Override
+                            public void onSuccess(Produit product) {
+                                runOnUiThread(() -> {
+                                    produitsRecherche.clear();
+                                    // Vérifie si le produit est déjà dans le repas
+                                    ArrayList<Long> produitsDuRepas = helper.getProduitCalendrier(date, date_journee);
+                                    boolean dejaPresent = false;
+                                    for (long idProduit : produitsDuRepas) {
+                                        Produit produitExistant = helper.getProductById(idProduit);
+                                        if (produitExistant != null &&
+                                                produitExistant.getName().equals(product.getName())) {
+                                            dejaPresent = true;
+                                            break;
+                                        }
                                     }
-                                }
 
-                                if (dejaPresent) {
-                                    Toast.makeText(
-                                            AjouterProduit.this,
-                                            "Produit déjà ajouté, vous pouvez modifier la quantité",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                    return;
-                                }
+                                    if (dejaPresent) {
+                                        Toast.makeText(
+                                                AjouterProduit.this,
+                                                "Produit déjà ajouté, vous pouvez modifier la quantité",
+                                                Toast.LENGTH_SHORT
+                                        ).show();
+                                        return;
+                                    }
 
-                                // Insère le produit si nécessaire
-                                long idProduit = helper.getProduitIdByName(product.getName());
-                                if (idProduit == -1) {
-                                    idProduit = helper.insertProduit(product);
-                                }
+                                    // Insère le produit si nécessaire
+                                    long idProduit = helper.getProduitIdByName(product.getName());
+                                    if (idProduit == -1) {
+                                        idProduit = helper.insertProduit(product);
+                                        helper.insertProduit100g(product);
+                                    }
 
-                                // Insère le produit dans le calendrier
-                                long idCalendrier = helper.insertCalendrier(idProduit, date, date_journee, 0);
-                                Calendrier calendrier = helper.getCalendrierById(idCalendrier);
+                                    // Insère le produit dans le calendrier
+                                    long idCalendrier = helper.insertCalendrier(idProduit, date, date_journee, 0);
+                                    Calendrier calendrier = helper.getCalendrierById(idCalendrier);
 
-                                // Ajoute à la liste locale pour l'adapter
-                                produitsRecherche.add(new ProduitCalendrier(product, calendrier));
-                                adapterRecherche.notifyDataSetChanged();
-                                listViewRecherche.setVisibility(View.VISIBLE);
+                                    // Ajoute à la liste locale pour l'adapter
+                                    produitsRecherche.add(new ProduitCalendrier(product, calendrier));
+                                    adapterRecherche.notifyDataSetChanged();
+                                    listViewRecherche.setVisibility(View.VISIBLE);
 
-                                Cursor cursor = helper.getAllProductsCalendrier();
+                                    Cursor cursor = helper.getAllProductsCalendrier();
 
-                                while (cursor.moveToNext()) {
+                                    while (cursor.moveToNext()) {
 
-                                    // Récupérer toutes les valeurs depuis le Cursor
-                                    String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
-                                    String idproduit = cursor.getString(cursor.getColumnIndexOrThrow("idproduit"));
-                                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                                    String repas = cursor.getString(cursor.getColumnIndexOrThrow("repas"));
-                                    String quantite = cursor.getString(cursor.getColumnIndexOrThrow("quantite"));
-
-
-                                    System.out.println(id);
-                                    System.out.println(idproduit);
-                                    System.out.println(date);
-                                    System.out.println(repas);
-                                    System.out.println(quantite);
+                                        // Récupérer toutes les valeurs depuis le Cursor
+                                        String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+                                        String idproduit = cursor.getString(cursor.getColumnIndexOrThrow("idproduit"));
+                                        String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                                        String repas = cursor.getString(cursor.getColumnIndexOrThrow("repas"));
+                                        String quantite = cursor.getString(cursor.getColumnIndexOrThrow("quantite"));
 
 
-                                }
+                                        System.out.println(id);
+                                        System.out.println(idproduit);
+                                        System.out.println(date);
+                                        System.out.println(repas);
+                                        System.out.println(quantite);
 
-                                cursor.close();
+                                    }
 
-                            });
-                        }
+                                    cursor.close();
 
-                        @Override
-                        public void onError(Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                                });
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
+
                 }else{
                     listViewRecherche.setVisibility(View.GONE);
                     listView.setVisibility(View.VISIBLE);
@@ -280,6 +294,7 @@ public class AjouterProduit extends AppCompatActivity {
                                     long idProduit = helper.getProduitIdByName(product.getName());
                                     if (idProduit == -1) {
                                         idProduit = helper.insertProduit(product);
+                                        helper.insertProduit100g(product);
                                     }
 
                                     // Insère le produit dans le calendrier

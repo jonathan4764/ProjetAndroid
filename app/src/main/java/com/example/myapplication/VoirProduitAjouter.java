@@ -2,11 +2,15 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +21,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +41,10 @@ public class VoirProduitAjouter extends AppCompatActivity {
             return insets;
         });
 
-        TextView titre = findViewById(R.id.textView3);
+        TextView titre = findViewById(R.id.textProduit);
+        TextView quantite = findViewById(R.id.textPour100g);
+
+        ImageView image = findViewById(R.id.imageProduit);
 
         Button ajouter = findViewById(R.id.btnAdd);
 
@@ -77,23 +85,36 @@ public class VoirProduitAjouter extends AppCompatActivity {
 
         long p = helper.getProduitIdByName(nom);
 
-        valeur.setText(String.valueOf(helper.getCalendrierById(idCalendrier).getValeur()));
+        double quantites = helper.getCalendrierById(idCalendrier).getValeur();
 
-        Produit produit = helper.getProductById(p);
+        quantite.setText("pour " + quantites + "g");
+
+        Produit produit = helper.getProductById100g(p);
 
         ArrayList<Nutriment> listeNutriments = new ArrayList<>();
 
-        listeNutriments.add(new Nutriment("proteine", String.valueOf(produit.getProteine())));
-        listeNutriments.add(new Nutriment("glucide", String.valueOf(produit.getGlucide())));
-        listeNutriments.add(new Nutriment("calorie", String.valueOf(produit.getCalorie())));
-        listeNutriments.add(new Nutriment("energiekj", String.valueOf(produit.getEnergiekj())));
-        listeNutriments.add(new Nutriment("sel", String.valueOf(produit.getSel())));
-        listeNutriments.add(new Nutriment("sodium", String.valueOf(produit.getSodium())));
-        listeNutriments.add(new Nutriment("sucre", String.valueOf(produit.getSucre())));
-        listeNutriments.add(new Nutriment("matieregrasse", String.valueOf(produit.getMatieregrasse())));
-        listeNutriments.add(new Nutriment("matieregrassesature", String.valueOf(produit.getMatieregrassesature())));
+        listeNutriments.add(new Nutriment("proteine", String.valueOf((quantites*produit.getProteine())/100)));
+        listeNutriments.add(new Nutriment("glucide", String.valueOf((quantites*produit.getGlucide())/100)));
+        listeNutriments.add(new Nutriment("calorie", String.valueOf((quantites*produit.getCalorie())/100)));
+        listeNutriments.add(new Nutriment("energiekj", String.valueOf((quantites*produit.getEnergiekj())/100)));
+        listeNutriments.add(new Nutriment("sel", String.valueOf((quantites*produit.getSel())/100)));
+        listeNutriments.add(new Nutriment("sodium", String.valueOf((quantites*produit.getSodium())/100)));
+        listeNutriments.add(new Nutriment("sucre", String.valueOf((quantites*produit.getSucre())/100)));
+        listeNutriments.add(new Nutriment("matieregrasse", String.valueOf((quantites*produit.getMatieregrasse())/100)));
+        listeNutriments.add(new Nutriment("matieregrassesature", String.valueOf((quantites*produit.getMatieregrassesature())/100)));
 
-
+        String imageUrl = produit.getImage();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            new Thread(() -> {
+                try {
+                    InputStream input = new java.net.URL(imageUrl).openStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(input);
+                    image.post(() -> image.setImageBitmap(bitmap));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
 
 
 
@@ -113,7 +134,8 @@ public class VoirProduitAjouter extends AppCompatActivity {
                         }
                         double q = Double.parseDouble(qStr);
 
-                        long idproduit = helper.getProduitIdByName(produit.getName());
+
+                        long idproduit = helper.getProduitIdByName100g(produit.getName());
 
 
                         for(Nutriment n : listeNutriments){

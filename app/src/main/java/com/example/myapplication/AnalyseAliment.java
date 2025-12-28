@@ -49,7 +49,7 @@ public class AnalyseAliment extends AppCompatActivity{
 
             ArrayList<Produit> listeProduits = new ArrayList<>();
 
-            Cursor cursor = helper.getAllProducts();
+            Cursor cursor = helper.getAllProducts100g();
 
             while (cursor.moveToNext()) {
 
@@ -156,6 +156,7 @@ public class AnalyseAliment extends AppCompatActivity{
 
                                                 // Insère le produit
                                                 helper.insertProduit(product);
+                                                helper.insertProduit100g(product);
 
                                                 listeProduits.add(product);
                                                 adapter.notifyDataSetChanged();

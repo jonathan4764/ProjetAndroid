@@ -50,6 +50,24 @@ public class Helper extends SQLiteOpenHelper {
     public static final String COL_INGREDIENTS = "ingredients";
     public static final String COL_ALLERGENES = "allergenes";
 
+    // Info Table Produit
+    public static final String TABLE_PRODUIT_100g = "produit100g";
+    public static final String COL_ID_PRODUIT_100g = "id";
+    public static final String COL_NAME_100g = "nom";
+    public static final String COL_IMAGE_100g = "image";
+    public static final String COL_PROTEINE_100g = "proteine";
+    public static final String COL_GLUCIDE_100g = "glucide";
+    public static final String COL_CALORIE_100g = "calorie";
+    public static final String COL_ENERGIE_KJ_100g = "energiekj";
+    public static final String COL_SEL_100g = "sel";
+    public static final String COL_SODIUM_100g = "sodium";
+    public static final String COL_SUCRE_100g = "sucre";
+    public static final String COL_MATIERE_GRASSE_100g = "matieregrasse";
+    public static final String COL_MATIERE_GRASSE_SATURE_100g = "matieregrassesature";
+    public static final String COL_NUTRISCORE_100g = "nutriscore";
+    public static final String COL_INGREDIENTS_100g = "ingredients";
+    public static final String COL_ALLERGENES_100g = "allergenes";
+
 
 
 
@@ -108,6 +126,25 @@ public class Helper extends SQLiteOpenHelper {
                     COL_ALLERGENES + " TEXT" +
                     ")";
 
+    private static final String CREATE_TABLE_PRODUIT_100g =
+            "CREATE TABLE " + TABLE_PRODUIT_100g + " (" +
+                    COL_ID_PRODUIT_100g + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COL_NAME_100g + " TEXT UNIQUE, " +
+                    COL_IMAGE_100g + " TEXT, " +
+                    COL_PROTEINE_100g + " REAL, " +
+                    COL_GLUCIDE_100g + " REAL, " +
+                    COL_CALORIE_100g + " REAL, " +
+                    COL_ENERGIE_KJ_100g + " REAL, " +
+                    COL_SEL_100g + " REAL, " +
+                    COL_SODIUM_100g + " REAL, " +
+                    COL_SUCRE_100g + " REAL, " +
+                    COL_MATIERE_GRASSE_100g + " REAL, " +
+                    COL_MATIERE_GRASSE_SATURE_100g + " REAL, " +
+                    COL_NUTRISCORE_100g + " TEXT, " +
+                    COL_INGREDIENTS_100g + " TEXT, " +
+                    COL_ALLERGENES_100g + " TEXT" +
+                    ")";
+
     public Helper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -127,6 +164,7 @@ public class Helper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PRODUIT);
         db.execSQL(CREATE_USER_PRODUIT);
         db.execSQL(CREATE_CALENDRIER);
+        db.execSQL(CREATE_TABLE_PRODUIT_100g);
     }
 
     @Override
@@ -167,6 +205,31 @@ public class Helper extends SQLiteOpenHelper {
 
         // Insérer le produit dans la table et récupérer l'ID généré
         long idProduit = db.insert("produit", null, values);
+        db.close();
+        return idProduit;
+    }
+
+    public long insertProduit100g(Produit product) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("nom", product.getName());
+        values.put("image", product.getImage());
+        values.put("proteine", product.getProteine());
+        values.put("glucide", product.getGlucide());
+        values.put("calorie", product.getCalorie());
+        values.put("energiekj", product.getEnergiekj());
+        values.put("sel", product.getSel());
+        values.put("sodium", product.getSodium());
+        values.put("sucre", product.getSucre());
+        values.put("matieregrasse", product.getMatieregrasse());
+        values.put("matieregrassesature", product.getMatieregrassesature());
+        values.put("nutriscore", product.getNutriscore());
+        values.put("ingredients", product.getIngrediants());
+        values.put("allergenes", product.getAllergenes());
+
+        // Insérer le produit dans la table et récupérer l'ID généré
+        long idProduit = db.insert("produit100g", null, values);
         db.close();
         return idProduit;
     }
@@ -470,12 +533,65 @@ public class Helper extends SQLiteOpenHelper {
         return produit;
     }
 
+    public Produit getProductById100g(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Produit produit = null;
+
+        // Requête pour récupérer le produit par son nom
+        String query = "SELECT * FROM produit100g WHERE id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+
+        if (cursor.moveToFirst()) { // Si le produit existe
+
+            // Récupération des valeurs depuis le Cursor
+            String nom = cursor.getString(cursor.getColumnIndexOrThrow("nom"));
+            String image = cursor.getString(cursor.getColumnIndexOrThrow("image"));
+            double proteine = cursor.getDouble(cursor.getColumnIndexOrThrow("proteine"));
+            double glucide = cursor.getDouble(cursor.getColumnIndexOrThrow("glucide"));
+            double calorie = cursor.getDouble(cursor.getColumnIndexOrThrow("calorie"));
+            double energiekj = cursor.getDouble(cursor.getColumnIndexOrThrow("energiekj"));
+            double sel = cursor.getDouble(cursor.getColumnIndexOrThrow("sel"));
+            double sodium = cursor.getDouble(cursor.getColumnIndexOrThrow("sodium"));
+            double sucre = cursor.getDouble(cursor.getColumnIndexOrThrow("sucre"));
+            double matieregrasse = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrasse"));
+            double matieregrassesature = cursor.getDouble(cursor.getColumnIndexOrThrow("matieregrassesature"));
+            String nutriscore = cursor.getString(cursor.getColumnIndexOrThrow("nutriscore"));
+            String ingrediants = cursor.getString(cursor.getColumnIndexOrThrow("ingredients"));
+            String allergenes = cursor.getString(cursor.getColumnIndexOrThrow("allergenes"));
+
+            // Construire le produit avec les valeurs récupérées
+            produit = new Produit(nom, image, proteine, glucide,calorie, energiekj, sel, sodium, sucre,
+                    matieregrasse, matieregrassesature, nutriscore, ingrediants, allergenes
+            );
+        }
+
+        cursor.close();
+        return produit;
+    }
+
     public long getProduitIdByName(String nomProduit) {
         SQLiteDatabase db = this.getReadableDatabase();
         long id = -1;
 
         Cursor cursor = db.rawQuery(
                 "SELECT id FROM produit WHERE nom = ?",
+                new String[]{nomProduit}
+        );
+
+        if (cursor.moveToFirst()) {
+            id = cursor.getLong(0); // récupère la première colonne → id
+        }
+
+        cursor.close();
+        return id;
+    }
+
+    public long getProduitIdByName100g(String nomProduit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long id = -1;
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id FROM produit100g WHERE nom = ?",
                 new String[]{nomProduit}
         );
 
@@ -495,6 +611,11 @@ public class Helper extends SQLiteOpenHelper {
     public Cursor getAllProducts() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_PRODUIT, null);
+    }
+
+    public Cursor getAllProducts100g() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_PRODUIT_100g, null);
     }
 
     public Cursor getAllProductsCalendrier() {
